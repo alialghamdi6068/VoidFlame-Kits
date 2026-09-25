@@ -1,29 +1,29 @@
 package net.voidflame.kits;
 
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.event.Listener;
 
 import java.lang.reflect.Method;
-import java.util.Objects;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public final class VoidFlameKitsPlugin extends JavaPlugin implements Listener {
+public final class VoidFlameKitsPlugin extends JavaPlugin {
     private Object storage;
     private Method put;
     private Method get;
+    private KitCatalog catalog;
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
         if (!connectStorage()) {
             getLogger().severe("VoidFlame-Core storage service is unavailable.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        saveDefaultConfig();
-        getServer().getPluginManager().registerEvents(this, this);
-        getLogger().info("VoidFlame-Kits enabled. Persistent data is provided by VoidFlame-Core.");
+        catalog = new KitCatalog(this);
+        getServer().getServicesManager().register(KitCatalog.class, catalog, this, ServicePriority.Normal);
+        getLogger().info("VoidFlame-Kits enabled with canonical seven-kit catalog.");
     }
 
     private boolean connectStorage() {
@@ -36,7 +36,6 @@ public final class VoidFlameKitsPlugin extends JavaPlugin implements Listener {
             get = type.getMethod("get", String.class, String.class);
             return true;
         } catch (ReflectiveOperationException ex) {
-            getLogger().severe("Unable to connect to VoidFlame-Core storage: " + ex.getMessage());
             return false;
         }
     }
@@ -55,5 +54,14 @@ public final class VoidFlameKitsPlugin extends JavaPlugin implements Listener {
         } catch (ReflectiveOperationException ex) {
             return CompletableFuture.failedFuture(ex);
         }
+    }
+
+    public KitCatalog catalog() {
+        return catalog;
+    }
+
+    @Override
+    public void onDisable() {
+        getServer().getServicesManager().unregister(KitCatalog.class, this);
     }
 }
