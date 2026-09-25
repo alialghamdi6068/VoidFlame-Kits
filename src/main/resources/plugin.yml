@@ -1,0 +1,9 @@
+name: VoidFlame-Kits
+version: 1.0.0
+main: net.voidflame.kits.VoidFlameKitsPlugin
+description: Kits module for VoidFlame MC.
+author: VoidFlame
+website: https://github.com/alialghamdi6068/VoidFlame-Kits
+api-version: '26.2'
+load: POSTWORLD
+depend: [VoidFlame-Core]
