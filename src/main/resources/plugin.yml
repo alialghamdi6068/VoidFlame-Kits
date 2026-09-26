@@ -7,3 +7,11 @@ website: https://github.com/alialghamdi6068/VoidFlame-Kits
 api-version: '26.2'
 load: POSTWORLD
 depend: [VoidFlame-Core]
+
+commands:
+  kit:
+    description: Apply a VoidFlame kit.
+    usage: /kit <name>
+  kits:
+    description: List VoidFlame kits.
+    usage: /kits
