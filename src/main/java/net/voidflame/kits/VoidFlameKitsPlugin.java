@@ -1,7 +1,6 @@
 package net.voidflame.kits;
 
 import net.voidflame.core.storage.StorageService;
-import net.voidflame.core.api.KitService;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,7 +10,7 @@ import java.util.concurrent.CompletableFuture;
 public final class VoidFlameKitsPlugin extends JavaPlugin {
     private StorageService storage;
     private KitCatalog catalog;
-    private KitService kitService;
+    private net.voidflame.kits.KitService kitService;
 
     @Override
     public void onEnable() {
@@ -27,7 +26,7 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
         getCommand("kits").setExecutor(new KitCommand(this));
         getServer().getPluginManager().registerEvents(new GoldenHeadListener(this), this);
         getServer().getServicesManager().register(KitCatalog.class, catalog, this, ServicePriority.Normal);
-        getServer().getServicesManager().register(KitService.class, kitService, this, ServicePriority.Normal);
+        getServer().getServicesManager().register(net.voidflame.core.api.KitService.class, kitService, this, ServicePriority.Normal);
         getLogger().info("VoidFlame-Kits enabled with canonical kit catalog.");
     }
 
@@ -51,7 +50,7 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
         return storage;
     }
 
-    public KitService kitService() { return kitService; }
+    public net.voidflame.kits.KitService kitService() { return kitService; }
 
     public KitCatalog catalog() {
         return catalog;
@@ -60,6 +59,6 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         getServer().getServicesManager().unregister(KitCatalog.class, this);
-        getServer().getServicesManager().unregister(KitService.class, kitService);
+        getServer().getServicesManager().unregister(net.voidflame.core.api.KitService.class, kitService);
     }
 }
