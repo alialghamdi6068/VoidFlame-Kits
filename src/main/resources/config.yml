@@ -1,3 +1,42 @@
 settings:
   enabled: true
   module: kits
+
+# Complete kit loadouts.
+# Inventory slots: 0-8 hotbar, 9-35 main inventory,
+# 36 boots, 37 leggings, 38 chestplate, 39 helmet, 40 offhand.
+kits:
+  sword:
+    items: {}
+    offhand:
+      material: AIR
+
+  axe:
+    items: {}
+    offhand:
+      material: AIR
+
+  uhc:
+    items: {}
+    offhand:
+      material: AIR
+
+  mace:
+    items: {}
+    offhand:
+      material: AIR
+
+  spear_mace:
+    items: {}
+    offhand:
+      material: AIR
+
+  crystal:
+    items: {}
+    offhand:
+      material: AIR
+
+  netherite_op:
+    items: {}
+    offhand:
+      material: AIR
