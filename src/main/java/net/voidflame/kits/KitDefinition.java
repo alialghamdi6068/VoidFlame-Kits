@@ -31,7 +31,4 @@ public record KitDefinition(
                 Map.of(7, Material.OBSIDIAN, 8, Material.END_CRYSTAL), true);
     }
 
-    static KitDefinition netheriteOp() {
-        return new KitDefinition("netherite_op", "Netherite OP", 9, 36, List.of(36,37,38,39), Map.of(), true);
-    }
 }
