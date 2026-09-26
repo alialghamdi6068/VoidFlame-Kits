@@ -1,9 +1,14 @@
 package net.voidflame.kits;
 
 import org.bukkit.Material;
+import org.bukkit.block.ShulkerBox;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionType;
 import org.bukkit.enchantments.Enchantment;
 
 import java.util.HashMap;
@@ -19,10 +24,6 @@ public final class KitService {
         this.plugin = plugin;
     }
 
-    /**
-     * Applies the complete configured loadout: inventory, armor and offhand.
-     * Slots follow Bukkit's player-inventory indexing.
-     */
     public boolean apply(Player player, String id) {
         if (player == null || id == null) return false;
         String kitId = id.toLowerCase(Locale.ROOT);
@@ -71,18 +72,53 @@ public final class KitService {
         int amount = Math.max(1, section.getInt("amount", 1));
         ItemStack item = new ItemStack(material, Math.min(amount, material.getMaxStackSize()));
 
-        ConfigurationSection enchants = section.getConfigurationSection("enchants");
-        if (enchants != null) {
-            for (String enchantName : enchants.getKeys(false)) {
-                Enchantment enchantment = Enchantment.getByName(enchantName.toUpperCase(Locale.ROOT));
-                if (enchantment == null) {
-                    plugin.getLogger().warning("Unknown enchantment '" + enchantName + "' in kits config.");
-                    continue;
-                }
-                item.addUnsafeEnchantment(enchantment, Math.max(1, enchants.getInt(enchantName, 1)));
-            }
-        }
+        applyPotion(item, section.getString("potion", null));
+        applyEnchantments(item, section.getConfigurationSection("enchants"));
+        applyShulkerContents(item, section.getConfigurationSection("contents"));
         return item;
+    }
+
+    private void applyPotion(ItemStack item, String potionName) {
+        if (potionName == null || !(item.getItemMeta() instanceof PotionMeta meta)) return;
+        try {
+            PotionType type = PotionType.valueOf(potionName.toUpperCase(Locale.ROOT));
+            meta.setBasePotionType(type);
+            item.setItemMeta(meta);
+        } catch (IllegalArgumentException ex) {
+            plugin.getLogger().warning("Unknown potion type '" + potionName + "' in kits config.");
+        }
+    }
+
+    private void applyEnchantments(ItemStack item, ConfigurationSection enchants) {
+        if (enchants == null) return;
+        for (String enchantName : enchants.getKeys(false)) {
+            Enchantment enchantment = Enchantment.getByName(enchantName.toUpperCase(Locale.ROOT));
+            if (enchantment == null) {
+                plugin.getLogger().warning("Unknown enchantment '" + enchantName + "' in kits config.");
+                continue;
+            }
+            item.addUnsafeEnchantment(enchantment, Math.max(1, enchants.getInt(enchantName, 1)));
+        }
+    }
+
+    private void applyShulkerContents(ItemStack item, ConfigurationSection contents) {
+        if (contents == null || !(item.getItemMeta() instanceof BlockStateMeta meta)) return;
+        if (!(meta.getBlockState() instanceof ShulkerBox shulker)) return;
+
+        for (String key : contents.getKeys(false)) {
+            int slot;
+            try {
+                slot = Integer.parseInt(key);
+            } catch (NumberFormatException ignored) {
+                continue;
+            }
+            if (slot < 0 || slot >= shulker.getInventory().getSize()) continue;
+            ItemStack nested = readItem(contents.getConfigurationSection(key));
+            if (nested != null) shulker.getInventory().setItem(slot, nested);
+        }
+
+        meta.setBlockState(shulker);
+        item.setItemMeta(meta);
     }
 
     private void setSlot(Player player, int slot, ItemStack item) {
