@@ -38,3 +38,5 @@ tasks.shadowJar {
 tasks.build {
     dependsOn(tasks.shadowJar)
 }
+
+// CI refresh after Core database fix.
