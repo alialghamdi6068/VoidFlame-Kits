@@ -2,10 +2,142 @@ settings:
   enabled: true
   module: kits
 
-# Complete kit loadouts.
+# Bukkit player inventory slots:
 # 0-8 hotbar, 9-35 main inventory, 36 boots, 37 leggings,
 # 38 chestplate, 39 helmet, 40 offhand.
+#
+# Mace PvP is the canonical high-end practice loadout.
+# Potion durations are vanilla because the potion types are vanilla upgraded potions.
+
 kits:
+  mace:
+    items:
+      "0":
+        material: NETHERITE_SWORD
+        amount: 1
+        enchants:
+          DAMAGE_ALL: 5
+          DURABILITY: 3
+      "1":
+        material: MACE
+        amount: 1
+        enchants:
+          WIND_BURST: 1
+          DENSITY: 5
+          DURABILITY: 3
+      "2":
+        material: MACE
+        amount: 1
+        enchants:
+          BREACH: 4
+          DURABILITY: 3
+      "3": { material: ELYTRA, amount: 1 }
+      "4":
+        material: SHIELD
+        amount: 1
+        enchants:
+          DURABILITY: 3
+          MENDING: 1
+      "5": { material: GOLDEN_APPLE, amount: 64 }
+      "6": { material: ENDER_PEARL, amount: 16 }
+      "7": { material: WIND_CHARGE, amount: 64 }
+      "8":
+        material: NETHERITE_AXE
+        amount: 1
+        enchants:
+          DAMAGE_ALL: 5
+          DURABILITY: 3
+
+      "9": { material: ENDER_PEARL, amount: 16 }
+      "10": { material: ENDER_PEARL, amount: 16 }
+      "11": { material: ENDER_PEARL, amount: 16 }
+      "12": { material: WIND_CHARGE, amount: 64 }
+      "13": { material: GOLDEN_APPLE, amount: 64 }
+      "14": { material: GOLDEN_APPLE, amount: 64 }
+      "15":
+        material: PURPLE_SHULKER_BOX
+        amount: 1
+        contents:
+          "0": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+          "1": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+          "2": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+          "3": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+          "4": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+          "5": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+          "6": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+          "7": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+          "8": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+          "9": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+          "10": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+          "11": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+          "12": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+          "13": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+          "14": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+          "15": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+          "16": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+          "17": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+          "18": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+          "19": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+          "20": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+          "21": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+          "22": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+          "23": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+          "24": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+          "25": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+          "26": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+      "16": { material: TOTEM_OF_UNDYING, amount: 1 }
+      "17": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+      "18": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+      "19": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+      "20": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+      "21": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+      "22": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+      "23": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+      "24": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+      "25": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+      "26": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+      "27": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+      "28": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+      "29": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+      "30": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+      "31": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+      "32": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+      "33": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+      "34": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
+      "35": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
+
+      "36":
+        material: NETHERITE_BOOTS
+        amount: 1
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 4
+          FEATHER_FALLING: 4
+          DURABILITY: 3
+      "37":
+        material: NETHERITE_LEGGINGS
+        amount: 1
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 4
+          DURABILITY: 3
+      "38":
+        material: NETHERITE_CHESTPLATE
+        amount: 1
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 4
+          DURABILITY: 3
+      "39":
+        material: NETHERITE_HELMET
+        amount: 1
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 4
+          DURABILITY: 3
+    offhand:
+      material: SHIELD
+      amount: 1
+      enchants:
+        DURABILITY: 3
+        MENDING: 1
+
   sword:
     items:
       "0": { material: DIAMOND_SWORD, amount: 1 }
@@ -41,18 +173,6 @@ kits:
       "6": { material: COBBLESTONE, amount: 64 }
       "7": { material: FISHING_ROD, amount: 1 }
       "8": { material: COOKED_BEEF, amount: 32 }
-      "36": { material: DIAMOND_BOOTS, amount: 1 }
-      "37": { material: DIAMOND_LEGGINGS, amount: 1 }
-      "38": { material: DIAMOND_CHESTPLATE, amount: 1 }
-      "39": { material: DIAMOND_HELMET, amount: 1 }
-    offhand: { material: AIR }
-
-  mace:
-    items:
-      "0": { material: MACE, amount: 1 }
-      "1": { material: ENDER_PEARL, amount: 8 }
-      "2": { material: GOLDEN_APPLE, amount: 8 }
-      "3": { material: COBBLESTONE, amount: 64 }
       "36": { material: DIAMOND_BOOTS, amount: 1 }
       "37": { material: DIAMOND_LEGGINGS, amount: 1 }
       "38": { material: DIAMOND_CHESTPLATE, amount: 1 }
