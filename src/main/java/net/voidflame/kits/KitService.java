@@ -1,6 +1,5 @@
 package net.voidflame.kits;
 
-import net.voidflame.core.api.KitService;
 
 import org.bukkit.Material;
 import org.bukkit.block.ShulkerBox;
