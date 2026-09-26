@@ -1,5 +1,7 @@
 package net.voidflame.kits;
 
+import net.voidflame.core.api.KitService;
+
 import org.bukkit.Material;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.configuration.ConfigurationSection;
@@ -21,7 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
-public final class KitService {
+public final class KitService implements net.voidflame.core.api.KitService {
     private final VoidFlameKitsPlugin plugin;
     private final Map<UUID, String> selected = new HashMap<>();
     private final NamespacedKey goldenHeadKey;
@@ -31,6 +33,7 @@ public final class KitService {
         this.goldenHeadKey = new NamespacedKey(plugin, "golden_head");
     }
 
+    @Override
     public boolean apply(Player player, String id) {
         if (player == null || id == null) return false;
         String kitId = id.toLowerCase(Locale.ROOT);
@@ -68,6 +71,11 @@ public final class KitService {
 
         selected.put(player.getUniqueId(), kitId);
         return true;
+    }
+
+    @Override
+    public boolean exists(String id) {
+        return id != null && plugin.catalog().get(id.toLowerCase(Locale.ROOT)) != null;
     }
 
     private ItemStack readItem(ConfigurationSection section) {
