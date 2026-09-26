@@ -12,6 +12,7 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
     private Method put;
     private Method get;
     private KitCatalog catalog;
+    private KitService kitService;
 
     @Override
     public void onEnable() {
@@ -21,7 +22,10 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        catalog = new KitCatalog(this);
+        catalog = new KitCatalog();
+        kitService = new KitService(this);
+        getCommand("kit").setExecutor(new KitCommand(this));
+        getCommand("kits").setExecutor(new KitCommand(this));
         getServer().getServicesManager().register(KitCatalog.class, catalog, this, ServicePriority.Normal);
         getLogger().info("VoidFlame-Kits enabled with canonical seven-kit catalog.");
     }
@@ -55,6 +59,8 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
             return CompletableFuture.failedFuture(ex);
         }
     }
+
+    public KitService kitService() { return kitService; }
 
     public KitCatalog catalog() {
         return catalog;
