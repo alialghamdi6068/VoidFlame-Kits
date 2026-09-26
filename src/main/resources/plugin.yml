@@ -12,6 +12,19 @@ commands:
   kit:
     description: Apply a VoidFlame kit.
     usage: /kit <name>
+    permission: voidflame.kits
   kits:
     description: List VoidFlame kits.
     usage: /kits
+    permission: voidflame.kits
+
+permissions:
+  voidflame.kits:
+    description: Use practice kits.
+    default: true
+  voidflame.kits.edit:
+    description: Edit personal kit layouts.
+    default: true
+  voidflame.kits.manage:
+    description: Create, edit and delete server kits.
+    default: op
