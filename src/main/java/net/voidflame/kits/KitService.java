@@ -11,6 +11,8 @@ import org.bukkit.inventory.meta.CrossbowMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.NamespacedKey;
 import org.bukkit.potion.PotionType;
 import org.bukkit.enchantments.Enchantment;
 
@@ -22,9 +24,11 @@ import java.util.UUID;
 public final class KitService {
     private final VoidFlameKitsPlugin plugin;
     private final Map<UUID, String> selected = new HashMap<>();
+    private final NamespacedKey goldenHeadKey;
 
     public KitService(VoidFlameKitsPlugin plugin) {
         this.plugin = plugin;
+        this.goldenHeadKey = new NamespacedKey(plugin, "golden_head");
     }
 
     public boolean apply(Player player, String id) {
@@ -69,18 +73,28 @@ public final class KitService {
     private ItemStack readItem(ConfigurationSection section) {
         if (section == null) return null;
         String materialName = section.getString("material", "AIR");
-        Material material = Material.matchMaterial(materialName);
+        boolean goldenHead = section.getBoolean("golden-head", false);
+        Material material = goldenHead ? Material.PLAYER_HEAD : Material.matchMaterial(materialName);
         if (material == null || material == Material.AIR) return null;
 
         int amount = Math.max(1, section.getInt("amount", 1));
         ItemStack item = new ItemStack(material, Math.min(amount, material.getMaxStackSize()));
 
+        if (goldenHead) markGoldenHead(item);
         applyPotion(item, section.getString("potion", null));
         applyCustomPotionEffect(item, section.getString("custom-potion-effect", null), section.getInt("custom-potion-duration-ticks", 0));
         applyChargedProjectile(item, section.getConfigurationSection("charged-projectile"));
         applyEnchantments(item, section.getConfigurationSection("enchants"));
         applyShulkerContents(item, section.getConfigurationSection("contents"));
         return item;
+    }
+
+    private void markGoldenHead(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        meta.setDisplayName("Golden Head");
+        meta.getPersistentDataContainer().set(goldenHeadKey, PersistentDataType.BYTE, (byte) 1);
+        item.setItemMeta(meta);
     }
 
     private void applyPotion(ItemStack item, String potionName) {
