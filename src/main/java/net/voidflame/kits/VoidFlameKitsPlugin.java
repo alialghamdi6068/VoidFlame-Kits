@@ -1,6 +1,7 @@
 package net.voidflame.kits;
 
 import net.voidflame.core.storage.StorageService;
+import net.voidflame.core.api.KitService;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,6 +27,7 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
         getCommand("kits").setExecutor(new KitCommand(this));
         getServer().getPluginManager().registerEvents(new GoldenHeadListener(this), this);
         getServer().getServicesManager().register(KitCatalog.class, catalog, this, ServicePriority.Normal);
+        getServer().getServicesManager().register(KitService.class, kitService, this, ServicePriority.Normal);
         getLogger().info("VoidFlame-Kits enabled with canonical kit catalog.");
     }
 
@@ -58,5 +60,6 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         getServer().getServicesManager().unregister(KitCatalog.class, this);
+        getServer().getServicesManager().unregister(KitService.class, kitService);
     }
 }
