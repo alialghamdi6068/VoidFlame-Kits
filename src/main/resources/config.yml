@@ -120,34 +120,18 @@ kits:
       "36":
         material: NETHERITE_BOOTS
         amount: 1
-        enchants:
-          PROTECTION_ENVIRONMENTAL: 4
-          FEATHER_FALLING: 4
-          DURABILITY: 3
       "37":
         material: NETHERITE_LEGGINGS
         amount: 1
-        enchants:
-          PROTECTION_ENVIRONMENTAL: 4
-          DURABILITY: 3
       "38":
         material: NETHERITE_CHESTPLATE
         amount: 1
-        enchants:
-          PROTECTION_ENVIRONMENTAL: 4
-          DURABILITY: 3
       "39":
         material: NETHERITE_HELMET
         amount: 1
-        enchants:
-          PROTECTION_ENVIRONMENTAL: 4
-          DURABILITY: 3
     offhand:
       material: SHIELD
       amount: 1
-      enchants:
-        DURABILITY: 3
-        MENDING: 1
 
   sword:
     items:
