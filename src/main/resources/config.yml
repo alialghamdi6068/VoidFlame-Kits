@@ -3,40 +3,99 @@ settings:
   module: kits
 
 # Complete kit loadouts.
-# Inventory slots: 0-8 hotbar, 9-35 main inventory,
-# 36 boots, 37 leggings, 38 chestplate, 39 helmet, 40 offhand.
+# 0-8 hotbar, 9-35 main inventory, 36 boots, 37 leggings,
+# 38 chestplate, 39 helmet, 40 offhand.
 kits:
   sword:
-    items: {}
-    offhand:
-      material: AIR
+    items:
+      "0": { material: DIAMOND_SWORD, amount: 1 }
+      "1": { material: GOLDEN_APPLE, amount: 8 }
+      "2": { material: COBBLESTONE, amount: 64 }
+      "3": { material: WATER_BUCKET, amount: 1 }
+      "36": { material: DIAMOND_BOOTS, amount: 1 }
+      "37": { material: DIAMOND_LEGGINGS, amount: 1 }
+      "38": { material: DIAMOND_CHESTPLATE, amount: 1 }
+      "39": { material: DIAMOND_HELMET, amount: 1 }
+    offhand: { material: AIR }
 
   axe:
-    items: {}
-    offhand:
-      material: AIR
+    items:
+      "0": { material: DIAMOND_AXE, amount: 1 }
+      "1": { material: SHIELD, amount: 1 }
+      "2": { material: GOLDEN_APPLE, amount: 8 }
+      "3": { material: COBBLESTONE, amount: 64 }
+      "36": { material: DIAMOND_BOOTS, amount: 1 }
+      "37": { material: DIAMOND_LEGGINGS, amount: 1 }
+      "38": { material: DIAMOND_CHESTPLATE, amount: 1 }
+      "39": { material: DIAMOND_HELMET, amount: 1 }
+    offhand: { material: AIR }
 
   uhc:
-    items: {}
-    offhand:
-      material: AIR
+    items:
+      "0": { material: DIAMOND_SWORD, amount: 1 }
+      "1": { material: BOW, amount: 1 }
+      "2": { material: GOLDEN_APPLE, amount: 6 }
+      "3": { material: ARROW, amount: 32 }
+      "4": { material: WATER_BUCKET, amount: 1 }
+      "5": { material: LAVA_BUCKET, amount: 1 }
+      "6": { material: COBBLESTONE, amount: 64 }
+      "7": { material: FISHING_ROD, amount: 1 }
+      "8": { material: COOKED_BEEF, amount: 32 }
+      "36": { material: DIAMOND_BOOTS, amount: 1 }
+      "37": { material: DIAMOND_LEGGINGS, amount: 1 }
+      "38": { material: DIAMOND_CHESTPLATE, amount: 1 }
+      "39": { material: DIAMOND_HELMET, amount: 1 }
+    offhand: { material: AIR }
 
   mace:
-    items: {}
-    offhand:
-      material: AIR
+    items:
+      "0": { material: MACE, amount: 1 }
+      "1": { material: ENDER_PEARL, amount: 8 }
+      "2": { material: GOLDEN_APPLE, amount: 8 }
+      "3": { material: COBBLESTONE, amount: 64 }
+      "36": { material: DIAMOND_BOOTS, amount: 1 }
+      "37": { material: DIAMOND_LEGGINGS, amount: 1 }
+      "38": { material: DIAMOND_CHESTPLATE, amount: 1 }
+      "39": { material: DIAMOND_HELMET, amount: 1 }
+    offhand: { material: AIR }
 
   spear_mace:
-    items: {}
-    offhand:
-      material: AIR
+    items:
+      "0": { material: SPEAR, amount: 1 }
+      "1": { material: MACE, amount: 1 }
+      "2": { material: ENDER_PEARL, amount: 8 }
+      "3": { material: GOLDEN_APPLE, amount: 8 }
+      "4": { material: COBBLESTONE, amount: 64 }
+      "36": { material: DIAMOND_BOOTS, amount: 1 }
+      "37": { material: DIAMOND_LEGGINGS, amount: 1 }
+      "38": { material: DIAMOND_CHESTPLATE, amount: 1 }
+      "39": { material: DIAMOND_HELMET, amount: 1 }
+    offhand: { material: AIR }
 
   crystal:
-    items: {}
-    offhand:
-      material: AIR
+    items:
+      "0": { material: NETHERITE_SWORD, amount: 1 }
+      "1": { material: END_CRYSTAL, amount: 64 }
+      "2": { material: OBSIDIAN, amount: 64 }
+      "3": { material: TOTEM_OF_UNDYING, amount: 4 }
+      "4": { material: ENDER_PEARL, amount: 16 }
+      "5": { material: GOLDEN_APPLE, amount: 16 }
+      "36": { material: NETHERITE_BOOTS, amount: 1 }
+      "37": { material: NETHERITE_LEGGINGS, amount: 1 }
+      "38": { material: NETHERITE_CHESTPLATE, amount: 1 }
+      "39": { material: NETHERITE_HELMET, amount: 1 }
+    offhand: { material: TOTEM_OF_UNDYING, amount: 1 }
 
   netherite_op:
-    items: {}
-    offhand:
-      material: AIR
+    items:
+      "0": { material: NETHERITE_SWORD, amount: 1 }
+      "1": { material: NETHERITE_AXE, amount: 1 }
+      "2": { material: GOLDEN_APPLE, amount: 16 }
+      "3": { material: ENDER_PEARL, amount: 16 }
+      "4": { material: COBBLESTONE, amount: 64 }
+      "5": { material: WATER_BUCKET, amount: 1 }
+      "36": { material: NETHERITE_BOOTS, amount: 1 }
+      "37": { material: NETHERITE_LEGGINGS, amount: 1 }
+      "38": { material: NETHERITE_CHESTPLATE, amount: 1 }
+      "39": { material: NETHERITE_HELMET, amount: 1 }
+    offhand: { material: AIR }
