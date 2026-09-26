@@ -7,6 +7,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.CrossbowMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionType;
 import org.bukkit.enchantments.Enchantment;
@@ -73,6 +76,8 @@ public final class KitService {
         ItemStack item = new ItemStack(material, Math.min(amount, material.getMaxStackSize()));
 
         applyPotion(item, section.getString("potion", null));
+        applyCustomPotionEffect(item, section.getString("custom-potion-effect", null), section.getInt("custom-potion-duration-ticks", 0));
+        applyChargedProjectile(item, section.getConfigurationSection("charged-projectile"));
         applyEnchantments(item, section.getConfigurationSection("enchants"));
         applyShulkerContents(item, section.getConfigurationSection("contents"));
         return item;
@@ -87,6 +92,25 @@ public final class KitService {
         } catch (IllegalArgumentException ex) {
             plugin.getLogger().warning("Unknown potion type '" + potionName + "' in kits config.");
         }
+    }
+
+    private void applyCustomPotionEffect(ItemStack item, String effectName, int durationTicks) {
+        if (effectName == null || durationTicks <= 0 || !(item.getItemMeta() instanceof PotionMeta meta)) return;
+        PotionEffectType type = PotionEffectType.getByName(effectName.toUpperCase(Locale.ROOT));
+        if (type == null) {
+            plugin.getLogger().warning("Unknown custom potion effect '" + effectName + "'.");
+            return;
+        }
+        meta.addCustomEffect(new PotionEffect(type, durationTicks, 0, false, true, true), true);
+        item.setItemMeta(meta);
+    }
+
+    private void applyChargedProjectile(ItemStack item, ConfigurationSection projectile) {
+        if (projectile == null || !(item.getItemMeta() instanceof CrossbowMeta meta)) return;
+        ItemStack charged = readItem(projectile);
+        if (charged == null || charged.getType() == Material.AIR) return;
+        meta.setChargedProjectiles(java.util.List.of(charged));
+        item.setItemMeta(meta);
     }
 
     private void applyEnchantments(ItemStack item, ConfigurationSection enchants) {
