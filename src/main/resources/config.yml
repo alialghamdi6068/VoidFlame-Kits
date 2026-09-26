@@ -141,44 +141,106 @@ kits:
 
   sword:
     items:
-      "0": { material: DIAMOND_SWORD, amount: 1 }
-      "1": { material: GOLDEN_APPLE, amount: 8 }
-      "2": { material: COBBLESTONE, amount: 64 }
-      "3": { material: WATER_BUCKET, amount: 1 }
-      "36": { material: DIAMOND_BOOTS, amount: 1 }
-      "37": { material: DIAMOND_LEGGINGS, amount: 1 }
-      "38": { material: DIAMOND_CHESTPLATE, amount: 1 }
-      "39": { material: DIAMOND_HELMET, amount: 1 }
+      "0":
+        material: DIAMOND_SWORD
+        amount: 1
+        enchants:
+          DAMAGE_ALL: 5
+      "36":
+        material: DIAMOND_BOOTS
+        amount: 1
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 4
+      "37":
+        material: DIAMOND_LEGGINGS
+        amount: 1
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 4
+      "38":
+        material: DIAMOND_CHESTPLATE
+        amount: 1
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 4
+      "39":
+        material: DIAMOND_HELMET
+        amount: 1
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 4
     offhand: { material: AIR }
 
   axe:
     items:
-      "0": { material: DIAMOND_AXE, amount: 1 }
-      "1": { material: SHIELD, amount: 1 }
-      "2": { material: GOLDEN_APPLE, amount: 8 }
-      "3": { material: COBBLESTONE, amount: 64 }
+      "0": { material: DIAMOND_SWORD, amount: 1 }
+      "1": { material: BOW, amount: 1 }
+      "2": { material: CROSSBOW, amount: 1 }
+      "3": { material: DIAMOND_AXE, amount: 1 }
       "36": { material: DIAMOND_BOOTS, amount: 1 }
       "37": { material: DIAMOND_LEGGINGS, amount: 1 }
       "38": { material: DIAMOND_CHESTPLATE, amount: 1 }
       "39": { material: DIAMOND_HELMET, amount: 1 }
-    offhand: { material: AIR }
+    offhand:
+      material: SHIELD
+      amount: 1
 
   uhc:
     items:
-      "0": { material: DIAMOND_SWORD, amount: 1 }
-      "1": { material: BOW, amount: 1 }
-      "2": { material: GOLDEN_APPLE, amount: 6 }
-      "3": { material: ARROW, amount: 32 }
+      "0":
+        material: DIAMOND_SWORD
+        amount: 1
+        enchants:
+          DAMAGE_ALL: 3
+      "1":
+        material: BOW
+        amount: 1
+        enchants:
+          ARROW_DAMAGE: 1
+      "2": { material: LAVA_BUCKET, amount: 1 }
+      "3":
+        material: DIAMOND_AXE
+        amount: 1
+        enchants:
+          DAMAGE_ALL: 3
       "4": { material: WATER_BUCKET, amount: 1 }
-      "5": { material: LAVA_BUCKET, amount: 1 }
-      "6": { material: COBBLESTONE, amount: 64 }
-      "7": { material: FISHING_ROD, amount: 1 }
-      "8": { material: COOKED_BEEF, amount: 32 }
-      "36": { material: DIAMOND_BOOTS, amount: 1 }
-      "37": { material: DIAMOND_LEGGINGS, amount: 1 }
-      "38": { material: DIAMOND_CHESTPLATE, amount: 1 }
-      "39": { material: DIAMOND_HELMET, amount: 1 }
+      "5": { material: STRIPPED_OAK_LOG, amount: 64 }
+      "6":
+        material: CROSSBOW
+        amount: 1
+        enchants:
+          PIERCING: 1
+      "7": { material: GOLDEN_APPLE, amount: 8 }
+      "8": { material: COBWEB, amount: 8 }
+      "9": { material: WATER_BUCKET, amount: 1 }
+      "10": { material: WATER_BUCKET, amount: 1 }
+      "11": { material: WATER_BUCKET, amount: 1 }
+      "12": { material: LAVA_BUCKET, amount: 1 }
+      "13": { material: LAVA_BUCKET, amount: 1 }
+      "14": { material: GOLDEN_HEAD, amount: 1, golden-head: true }
+      "15": { material: GOLDEN_HEAD, amount: 1, golden-head: true }
+      "16": { material: ARROW, amount: 12 }
+      "17": { material: STRIPPED_OAK_LOG, amount: 64 }
+      "18": { material: DIAMOND_PICKAXE, amount: 1 }
+      "36":
+        material: DIAMOND_BOOTS
+        amount: 1
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 3
+      "37":
+        material: DIAMOND_LEGGINGS
+        amount: 1
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 3
+      "38":
+        material: DIAMOND_CHESTPLATE
+        amount: 1
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 3
+      "39":
+        material: DIAMOND_HELMET
+        amount: 1
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 3
     offhand: { material: AIR }
+
 
   spear_mace:
     items:
@@ -192,6 +254,7 @@ kits:
       "38": { material: DIAMOND_CHESTPLATE, amount: 1 }
       "39": { material: DIAMOND_HELMET, amount: 1 }
     offhand: { material: AIR }
+
 
   crystal:
     items:
@@ -313,16 +376,84 @@ kits:
       material: TOTEM_OF_UNDYING
       amount: 1
 
-  netherite_op:
+  netherite_pot:
     items:
-      "0": { material: NETHERITE_SWORD, amount: 1 }
-      "1": { material: NETHERITE_AXE, amount: 1 }
-      "2": { material: GOLDEN_APPLE, amount: 16 }
-      "3": { material: ENDER_PEARL, amount: 16 }
-      "4": { material: COBBLESTONE, amount: 64 }
-      "5": { material: WATER_BUCKET, amount: 1 }
-      "36": { material: NETHERITE_BOOTS, amount: 1 }
-      "37": { material: NETHERITE_LEGGINGS, amount: 1 }
-      "38": { material: NETHERITE_CHESTPLATE, amount: 1 }
-      "39": { material: NETHERITE_HELMET, amount: 1 }
-    offhand: { material: AIR }
+      "0":
+        material: NETHERITE_SWORD
+        amount: 1
+        enchants:
+          DAMAGE_ALL: 5
+          SWEEPING_EDGE: 3
+          DURABILITY: 3
+      "1": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "2": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "3": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "4": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "5": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "6": { material: SPLASH_POTION, amount: 1, potion: STRONG_STRENGTH }
+      "7": { material: SPLASH_POTION, amount: 1, potion: STRONG_SWIFTNESS }
+      "8": { material: TOTEM_OF_UNDYING, amount: 1 }
+      "9": { material: TOTEM_OF_UNDYING, amount: 1 }
+      "10": { material: SPLASH_POTION, amount: 1, potion: STRONG_SWIFTNESS }
+      "11": { material: SPLASH_POTION, amount: 1, potion: STRONG_SWIFTNESS }
+      "12": { material: SPLASH_POTION, amount: 1, potion: STRONG_SWIFTNESS }
+      "13": { material: SPLASH_POTION, amount: 1, potion: STRONG_SWIFTNESS }
+      "14": { material: SPLASH_POTION, amount: 1, potion: STRONG_STRENGTH }
+      "15": { material: SPLASH_POTION, amount: 1, potion: STRONG_STRENGTH }
+      "16": { material: SPLASH_POTION, amount: 1, potion: STRONG_STRENGTH }
+      "17": { material: SPLASH_POTION, amount: 1, potion: STRONG_STRENGTH }
+      "18": { material: EXPERIENCE_BOTTLE, amount: 64 }
+      "19": { material: EXPERIENCE_BOTTLE, amount: 64 }
+      "20": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "21": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "22": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "23": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "24": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "25": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "26": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "27": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "28": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "29": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "30": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "31": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "32": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "33": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "34": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "35": { material: SPLASH_POTION, amount: 1, potion: STRONG_HEALING }
+      "36":
+        material: NETHERITE_BOOTS
+        amount: 1
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 4
+          PROTECTION_FALL: 4
+          SOUL_SPEED: 3
+          DEPTH_STRIDER: 3
+          DURABILITY: 3
+          MENDING: 1
+      "37":
+        material: NETHERITE_LEGGINGS
+        amount: 1
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 4
+          SWIFT_SNEAK: 3
+          DURABILITY: 3
+          MENDING: 1
+      "38":
+        material: NETHERITE_CHESTPLATE
+        amount: 1
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 4
+          DURABILITY: 3
+          MENDING: 1
+      "39":
+        material: NETHERITE_HELMET
+        amount: 1
+        enchants:
+          PROTECTION_ENVIRONMENTAL: 4
+          OXYGEN: 3
+          WATER_WORKER: 1
+          DURABILITY: 3
+          MENDING: 1
+    offhand:
+      material: GOLDEN_APPLE
+      amount: 64
