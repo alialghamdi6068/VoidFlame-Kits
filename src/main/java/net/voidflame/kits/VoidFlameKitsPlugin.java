@@ -1,16 +1,14 @@
 package net.voidflame.kits;
 
+import net.voidflame.core.storage.StorageService;
 import org.bukkit.plugin.ServicePriority;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.reflect.Method;
 import java.util.concurrent.CompletableFuture;
 
 public final class VoidFlameKitsPlugin extends JavaPlugin {
-    private Object storage;
-    private Method put;
-    private Method get;
+    private StorageService storage;
     private KitCatalog catalog;
     private KitService kitService;
 
@@ -27,37 +25,27 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
         getCommand("kit").setExecutor(new KitCommand(this));
         getCommand("kits").setExecutor(new KitCommand(this));
         getServer().getServicesManager().register(KitCatalog.class, catalog, this, ServicePriority.Normal);
-        getLogger().info("VoidFlame-Kits enabled with canonical seven-kit catalog.");
+        getLogger().info("VoidFlame-Kits enabled with canonical kit catalog.");
     }
 
     private boolean connectStorage() {
-        try {
-            Class<?> type = Class.forName("net.voidflame.core.storage.StorageService");
-            RegisteredServiceProvider<?> registration = getServer().getServicesManager().getRegistration(type);
-            if (registration == null) return false;
-            storage = registration.getProvider();
-            put = type.getMethod("put", String.class, String.class, String.class);
-            get = type.getMethod("get", String.class, String.class);
-            return true;
-        } catch (ReflectiveOperationException ex) {
-            return false;
-        }
+        RegisteredServiceProvider<StorageService> registration =
+                getServer().getServicesManager().getRegistration(StorageService.class);
+        if (registration == null || registration.getProvider() == null) return false;
+        storage = registration.getProvider();
+        return true;
     }
 
     public CompletableFuture<Void> put(String key, String value) {
-        try {
-            return (CompletableFuture<Void>) put.invoke(storage, "kits", key, value);
-        } catch (ReflectiveOperationException ex) {
-            return CompletableFuture.failedFuture(ex);
-        }
+        return storage.put("kits", key, value);
     }
 
     public CompletableFuture<String> get(String key) {
-        try {
-            return (CompletableFuture<String>) get.invoke(storage, "kits", key);
-        } catch (ReflectiveOperationException ex) {
-            return CompletableFuture.failedFuture(ex);
-        }
+        return storage.get("kits", key);
+    }
+
+    public StorageService storage() {
+        return storage;
     }
 
     public KitService kitService() { return kitService; }
