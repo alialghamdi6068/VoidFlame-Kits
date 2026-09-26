@@ -24,6 +24,7 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
         kitService = new KitService(this);
         getCommand("kit").setExecutor(new KitCommand(this));
         getCommand("kits").setExecutor(new KitCommand(this));
+        getServer().getPluginManager().registerEvents(new GoldenHeadListener(this), this);
         getServer().getServicesManager().register(KitCatalog.class, catalog, this, ServicePriority.Normal);
         getLogger().info("VoidFlame-Kits enabled with canonical kit catalog.");
     }
