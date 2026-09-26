@@ -2,6 +2,16 @@
 settings:
   enabled: true
   module: kits
+  strict-validation: true
+  prevent-duplication: true
+  editor-enabled: true
+  saved-layouts-enabled: true
+  max-saved-layouts-per-player: 8
+  require-valid-materials: true
+  require-splash-potions: true
+  golden-head-enabled: true
+  golden-head-heal-hearts: 4.0
+  golden-head-absorption-hearts: 2.0
 
 # Bukkit player inventory slots:
 # 0-8 hotbar, 9-35 main inventory, 36 boots, 37 leggings,
