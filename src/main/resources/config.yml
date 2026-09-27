@@ -23,18 +23,13 @@ settings:
 kits:
   mace:
     items:
-      "0":
-        material: NETHERITE_SWORD
-        amount: 1
-        enchants:
-          DAMAGE_ALL: 5
-          DURABILITY: 3
+      "0": { material: NETHERITE_SWORD, amount: 1 }
       "1":
         material: MACE
         amount: 1
         enchants:
-          WIND_BURST: 1
           DENSITY: 5
+          WIND_BURST: 1
           DURABILITY: 3
       "2":
         material: MACE
@@ -43,21 +38,11 @@ kits:
           BREACH: 4
           DURABILITY: 3
       "3": { material: ELYTRA, amount: 1 }
-      "4":
-        material: SHIELD
-        amount: 1
-        enchants:
-          DURABILITY: 3
-          MENDING: 1
+      "4": { material: SHIELD, amount: 1 }
       "5": { material: GOLDEN_APPLE, amount: 64 }
       "6": { material: ENDER_PEARL, amount: 16 }
       "7": { material: WIND_CHARGE, amount: 64 }
-      "8":
-        material: NETHERITE_AXE
-        amount: 1
-        enchants:
-          DAMAGE_ALL: 5
-          DURABILITY: 3
+      "8": { material: NETHERITE_AXE, amount: 1 }
 
       "9": { material: ENDER_PEARL, amount: 16 }
       "10": { material: ENDER_PEARL, amount: 16 }
@@ -117,20 +102,12 @@ kits:
       "34": { material: SPLASH_POTION, potion: STRONG_STRENGTH }
       "35": { material: SPLASH_POTION, potion: STRONG_SWIFTNESS }
 
-      "36":
-        material: NETHERITE_BOOTS
-        amount: 1
-      "37":
-        material: NETHERITE_LEGGINGS
-        amount: 1
-      "38":
-        material: NETHERITE_CHESTPLATE
-        amount: 1
-      "39":
-        material: NETHERITE_HELMET
-        amount: 1
+      "36": { material: NETHERITE_BOOTS, amount: 1 }
+      "37": { material: NETHERITE_LEGGINGS, amount: 1 }
+      "38": { material: NETHERITE_CHESTPLATE, amount: 1 }
+      "39": { material: NETHERITE_HELMET, amount: 1 }
     offhand:
-      material: SHIELD
+      material: TOTEM_OF_UNDYING
       amount: 1
 
   sword:
