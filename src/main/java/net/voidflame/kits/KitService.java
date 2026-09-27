@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class KitService implements net.voidflame.core.api.KitService {
     private final VoidFlameKitsPlugin plugin;
@@ -69,7 +71,51 @@ public final class KitService implements net.voidflame.core.api.KitService {
         if (offhand != null) player.getInventory().setItemInOffHand(offhand);
 
         selected.put(player.getUniqueId(), kitId);
+        var registration = org.bukkit.Bukkit.getServicesManager().getRegistration(net.voidflame.core.api.AuditLogService.class);
+        if (registration != null && registration.getProvider() != null) {
+            registration.getProvider().log(player.getUniqueId().toString(), "KIT_APPLY", player.getName(), "kit=" + kitId);
+        }
         return true;
+    }
+
+    public List<String> validateConfiguration() {
+        List<String> errors = new ArrayList<>();
+        for (String kitId : KitCatalog.KITS) {
+            ConfigurationSection root = plugin.getConfig().getConfigurationSection("kits." + kitId);
+            if (root == null) {
+                errors.add("Missing kit configuration: " + kitId);
+                continue;
+            }
+            ConfigurationSection items = root.getConfigurationSection("items");
+            if (items == null) {
+                errors.add("Missing items section: " + kitId);
+                continue;
+            }
+            for (String key : items.getKeys(false)) {
+                ConfigurationSection item = items.getConfigurationSection(key);
+                if (item == null) continue;
+                Material material = Material.matchMaterial(item.getString("material", "AIR"));
+                if (material == null) errors.add(kitId + " slot " + key + ": unknown material");
+                String potion = item.getString("potion");
+                if (potion != null) {
+                    try { PotionType.valueOf(potion.toUpperCase(Locale.ROOT)); }
+                    catch (IllegalArgumentException ex) { errors.add(kitId + " slot " + key + ": unknown potion " + potion); }
+                    if (plugin.getConfig().getBoolean("settings.require-splash-potions", true)
+                            && material != Material.SPLASH_POTION) {
+                        errors.add(kitId + " slot " + key + ": potion must use SPLASH_POTION");
+                    }
+                }
+                ConfigurationSection enchants = item.getConfigurationSection("enchants");
+                if (enchants != null) {
+                    for (String enchant : enchants.getKeys(false)) {
+                        if (Enchantment.getByName(enchant.toUpperCase(Locale.ROOT)) == null) {
+                            errors.add(kitId + " slot " + key + ": unknown enchantment " + enchant);
+                        }
+                    }
+                }
+            }
+        }
+        return List.copyOf(errors);
     }
 
     @Override
