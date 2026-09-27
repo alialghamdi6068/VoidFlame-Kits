@@ -22,6 +22,14 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
         }
         catalog = new KitCatalog();
         kitService = new KitService(this);
+        var validationErrors = kitService.validateConfiguration();
+        if (!validationErrors.isEmpty()) {
+            validationErrors.forEach(error -> getLogger().severe("[Config] " + error));
+            if (getConfig().getBoolean("settings.strict-validation", true)) {
+                getServer().getPluginManager().disablePlugin(this);
+                return;
+            }
+        }
         getCommand("kit").setExecutor(new KitCommand(this));
         getCommand("kits").setExecutor(new KitCommand(this));
         getServer().getPluginManager().registerEvents(new GoldenHeadListener(this), this);
