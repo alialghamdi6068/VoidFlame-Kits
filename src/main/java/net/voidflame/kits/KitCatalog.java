@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 public final class KitCatalog {
-    public static final List<String> KITS = List.of("sword","axe","uhc","mace","spear_mace","crystal");
+    public static final List<String> KITS = List.of("sword","axe","uhc","mace","crystal","netherite_pot","smp","spear_mace");
 
     private final Map<String, KitDefinition> definitions = new LinkedHashMap<>();
 
