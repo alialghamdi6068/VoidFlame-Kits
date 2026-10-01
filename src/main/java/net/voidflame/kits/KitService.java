@@ -237,6 +237,14 @@ public final class KitService implements net.voidflame.core.api.KitService {
         }
     }
 
+    @Override
+    public boolean openEditor(Player player, String kitId, String layoutName) {
+        if (player == null || kitId == null) return false;
+        if (!exists(kitId)) return false;
+        plugin.editor().open(player, kitId, layoutName == null || layoutName.isBlank() ? "default" : layoutName);
+        return true;
+    }
+
     public void clearSelected() { selected.clear(); }
 
     public String selected(Player player) {
