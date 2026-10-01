@@ -142,7 +142,14 @@ public final class KitService implements net.voidflame.core.api.KitService {
         return item;
     }
 
-    private void markKitItem(ItemStack item) {\n        ItemMeta meta = item.getItemMeta();\n        if (meta == null) return;\n        meta.getPersistentDataContainer().set(kitItemKey, PersistentDataType.BYTE, (byte) 1);\n        item.setItemMeta(meta);\n    }\n\n    private void markGoldenHead(ItemStack item) {
+    private void markKitItem(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        meta.getPersistentDataContainer().set(kitItemKey, PersistentDataType.BYTE, (byte) 1);
+        item.setItemMeta(meta);
+    }
+
+    private void markGoldenHead(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
         meta.setDisplayName("Golden Head");
