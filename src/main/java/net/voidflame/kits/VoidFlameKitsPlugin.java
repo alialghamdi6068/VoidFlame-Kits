@@ -30,8 +30,11 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
                 return;
             }
         }
-        getCommand("kit").setExecutor(new KitCommand(this));
-        getCommand("kits").setExecutor(new KitCommand(this));
+        KitCommand commandHandler = new KitCommand(this);
+        getCommand("kit").setExecutor(commandHandler);
+        getCommand("kit").setTabCompleter(commandHandler);
+        getCommand("kits").setExecutor(commandHandler);
+        getCommand("kits").setTabCompleter(commandHandler);
         getServer().getPluginManager().registerEvents(new GoldenHeadListener(this), this);
         getServer().getServicesManager().register(KitCatalog.class, catalog, this, ServicePriority.Normal);
         getServer().getServicesManager().register(net.voidflame.core.api.KitService.class, kitService, this, ServicePriority.Normal);
@@ -66,6 +69,7 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (kitService != null) kitService.clearSelected();
         getServer().getServicesManager().unregister(KitCatalog.class, this);
         getServer().getServicesManager().unregister(net.voidflame.core.api.KitService.class, kitService);
     }
