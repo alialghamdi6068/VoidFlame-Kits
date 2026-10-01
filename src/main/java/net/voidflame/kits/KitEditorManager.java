@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;\nimport org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
@@ -58,7 +58,7 @@ public final class KitEditorManager implements Listener {
         if (!(event.getView().getTopInventory().getHolder() instanceof Holder)) return;
         if (event.getClickedInventory() == event.getView().getBottomInventory()) return;
         if (event.getRawSlot() >= SIZE) return;
-        if (event.getClick().isDoubleClick()) event.setCancelled(true);
+        if (event.getClick() == ClickType.DOUBLE_CLICK) event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
