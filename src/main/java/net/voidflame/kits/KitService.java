@@ -97,7 +97,12 @@ public final class KitService implements net.voidflame.core.api.KitService {
                 ConfigurationSection item = items.getConfigurationSection(key);
                 if (item == null) continue;
                 Material material = Material.matchMaterial(item.getString("material", "AIR"));
-                if (material == null) errors.add(kitId + " slot " + key + ": unknown material");
+                if (material == null) {
+                    plugin.getLogger().warning("[Config] " + kitId + " slot " + key
+                            + ": unsupported material '" + item.getString("material", "AIR")
+                            + "'; the item will be skipped instead of disabling VoidFlame-Kits.");
+                    continue;
+                }
                 String potion = item.getString("potion");
                 if (potion != null) {
                     try { PotionType.valueOf(potion.toUpperCase(Locale.ROOT)); }
@@ -111,7 +116,8 @@ public final class KitService implements net.voidflame.core.api.KitService {
                 if (enchants != null) {
                     for (String enchant : enchants.getKeys(false)) {
                         if (Enchantment.getByName(enchant.toUpperCase(Locale.ROOT)) == null) {
-                            errors.add(kitId + " slot " + key + ": unknown enchantment " + enchant);
+                            plugin.getLogger().warning("[Config] " + kitId + " slot " + key
+                                    + ": unknown enchantment " + enchant + "; it will be ignored.");
                         }
                     }
                 }
@@ -130,7 +136,10 @@ public final class KitService implements net.voidflame.core.api.KitService {
         String materialName = section.getString("material", "AIR");
         boolean goldenHead = section.getBoolean("golden-head", false);
         Material material = goldenHead ? Material.PLAYER_HEAD : Material.matchMaterial(materialName);
-        if (material == null || material == Material.AIR) return null;
+        if (material == null || material == Material.AIR) {
+            plugin.getLogger().warning("Skipping unsupported material '" + materialName + "'.");
+            return null;
+        }
 
         int amount = Math.max(1, section.getInt("amount", 1));
         ItemStack item = new ItemStack(material, Math.min(amount, material.getMaxStackSize()));
@@ -195,7 +204,7 @@ public final class KitService implements net.voidflame.core.api.KitService {
         for (String enchantName : enchants.getKeys(false)) {
             Enchantment enchantment = Enchantment.getByName(enchantName.toUpperCase(Locale.ROOT));
             if (enchantment == null) {
-                plugin.getLogger().warning("Unknown enchantment '" + enchantName + "' in kits config.");
+                plugin.getLogger().warning("Unknown enchantment '" + enchantName + "' in kits config; skipping.");
                 continue;
             }
             item.addUnsafeEnchantment(enchantment, Math.max(1, enchants.getInt(enchantName, 1)));
@@ -231,7 +240,7 @@ public final class KitService implements net.voidflame.core.api.KitService {
             case 36 -> player.getInventory().setBoots(item);
             case 37 -> player.getInventory().setLeggings(item);
             case 38 -> player.getInventory().setChestplate(item);
-            case 39 -> player.getInventory().setHelmet(item);
+            case 39 -> player.getInventory().setChestplate(item);
             case 40 -> player.getInventory().setItemInOffHand(item);
             default -> { }
         }
