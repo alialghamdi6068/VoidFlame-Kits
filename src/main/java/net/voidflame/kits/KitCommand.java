@@ -24,7 +24,7 @@ public final class KitCommand implements CommandExecutor, TabCompleter {
             player.sendMessage(ChatColor.AQUA + "Available kits: " + String.join(", ", plugin.catalog().kits()));
             return true;
         }
-        if (args[0].equalsIgnoreCase("list")) {
+        if (args[0].equalsIgnoreCase("editor")) {\n            if (!player.hasPermission("voidflame.kits.edit")) { player.sendMessage(ChatColor.RED + "You do not have permission to edit kits."); return true; }\n            if (args.length < 2) { player.sendMessage(ChatColor.RED + "Usage: /kit editor <kit> [layout]"); return true; }\n            String layout = args.length >= 3 ? args[2] : "default";\n            plugin.editor().open(player, args[1].toLowerCase(Locale.ROOT), layout);\n            return true;\n        }\n        if (args[0].equalsIgnoreCase("list")) {
             player.sendMessage(ChatColor.AQUA + "Available kits: " + String.join(", ", plugin.catalog().kits()));
             return true;
         }
@@ -39,7 +39,7 @@ public final class KitCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            java.util.ArrayList<String> values = new java.util.ArrayList<>(plugin.catalog().kits());
+            java.util.ArrayList<String> values = new java.util.ArrayList<>(plugin.catalog().kits());\n            values.add("editor");
             values.add("list");
             String input = args[0].toLowerCase(Locale.ROOT);
             return values.stream().filter(v -> v.toLowerCase(Locale.ROOT).startsWith(input)).toList();
