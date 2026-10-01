@@ -27,11 +27,11 @@ import java.util.List;
 public final class KitService implements net.voidflame.core.api.KitService {
     private final VoidFlameKitsPlugin plugin;
     private final Map<UUID, String> selected = new HashMap<>();
-    private final NamespacedKey goldenHeadKey;
+    private final NamespacedKey goldenHeadKey;\n    private final NamespacedKey kitItemKey;
 
     public KitService(VoidFlameKitsPlugin plugin) {
         this.plugin = plugin;
-        this.goldenHeadKey = new NamespacedKey(plugin, "golden_head");
+        this.goldenHeadKey = new NamespacedKey(plugin, "golden_head");\n        this.kitItemKey = new NamespacedKey(plugin, "kit_item");
     }
 
     @Override
@@ -133,7 +133,7 @@ public final class KitService implements net.voidflame.core.api.KitService {
         int amount = Math.max(1, section.getInt("amount", 1));
         ItemStack item = new ItemStack(material, Math.min(amount, material.getMaxStackSize()));
 
-        if (goldenHead) markGoldenHead(item);
+        markKitItem(item);\n        if (goldenHead) markGoldenHead(item);
         applyPotion(item, section.getString("potion", null));
         applyCustomPotionEffect(item, section.getString("custom-potion-effect", null), section.getInt("custom-potion-duration-ticks", 0));
         applyChargedProjectile(item, section.getConfigurationSection("charged-projectile"));
@@ -142,7 +142,7 @@ public final class KitService implements net.voidflame.core.api.KitService {
         return item;
     }
 
-    private void markGoldenHead(ItemStack item) {
+    private void markKitItem(ItemStack item) {\n        ItemMeta meta = item.getItemMeta();\n        if (meta == null) return;\n        meta.getPersistentDataContainer().set(kitItemKey, PersistentDataType.BYTE, (byte) 1);\n        item.setItemMeta(meta);\n    }\n\n    private void markGoldenHead(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
         meta.setDisplayName("Golden Head");
