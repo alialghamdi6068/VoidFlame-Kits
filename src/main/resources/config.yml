@@ -255,7 +255,7 @@ kits:
       "0": {material: NETHERITE_SWORD, amount: 1, enchants: {DAMAGE_ALL: 5, DURABILITY: 3, MENDING: 1}}
       "1": {material: MACE, amount: 1, enchants: {DENSITY: 5, WIND_BURST: 1, DURABILITY: 3}}
       "2": {material: COOKED_BEEF, amount: 64}
-      "3": {material: SPEAR, amount: 1, enchants: {LUNGE: 3, DAMAGE_ALL: 5, DURABILITY: 3, MENDING: 1}}
+      "3": {material: NETHERITE_SPEAR, amount: 1, enchants: {LUNGE: 3, DAMAGE_ALL: 5, DURABILITY: 3, MENDING: 1}}
       "4": {material: SHIELD, amount: 1}
       "5": {material: GOLDEN_APPLE, amount: 64}
       "6": {material: ENDER_PEARL, amount: 16}
