@@ -120,7 +120,7 @@ public final class KitEditorManager implements Listener {
     }
 
     private java.util.concurrent.CompletableFuture<String> load(UUID uuid, String kit, String layout) {
-        return plugin.get("layout." + uuid + "." + kit + "." + layout);
+        return plugin.get("layouts." + uuid + "." + kit).then(value -> {\n            if (value == null || value.isBlank()) return null;\n            try {\n                byte[] bytes = Base64.getDecoder().decode(value);\n                try (BukkitObjectInputStream in = new BukkitObjectInputStream(new ByteArrayInputStream(bytes))) {\n                    Object object = in.readObject();\n                    if (object instanceof Map<?, ?> map && map.get(layout) instanceof String saved) return saved;\n                }\n            } catch (Exception ex) { plugin.getLogger().warning("Invalid saved layout index: " + ex.getMessage()); }\n            return null;\n        });
     }
 
     private void save(UUID uuid, String kit, String layout, String encoded) {
