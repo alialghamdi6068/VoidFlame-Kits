@@ -28,14 +28,6 @@ public final class KitCommand implements CommandExecutor, TabCompleter {
             player.sendMessage(ChatColor.AQUA + "Available kits: " + String.join(", ", plugin.catalog().kits()));
             return true;
         }
-        if (args[0].equalsIgnoreCase("editor")) {
-            if (!player.hasPermission("voidflame.kits.edit") || !plugin.getConfig().getBoolean("settings.editor-enabled", true)) {
-                player.sendMessage(ChatColor.RED + "Kit editor is disabled or you do not have permission.");
-                return true;
-            }
-            player.sendMessage(ChatColor.YELLOW + "The layout editor is managed by the server's kit menu.");
-            return true;
-        }
         if (!plugin.kitService().apply(player, args[0])) {
             player.sendMessage(ChatColor.RED + "Unknown kit.");
             return true;
@@ -49,7 +41,6 @@ public final class KitCommand implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             java.util.ArrayList<String> values = new java.util.ArrayList<>(plugin.catalog().kits());
             values.add("list");
-            if (sender.hasPermission("voidflame.kits.edit")) values.add("editor");
             String input = args[0].toLowerCase(Locale.ROOT);
             return values.stream().filter(v -> v.toLowerCase(Locale.ROOT).startsWith(input)).toList();
         }
