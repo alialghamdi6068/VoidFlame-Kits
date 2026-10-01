@@ -1,4 +1,9 @@
-# VoidFlame-Kits | Paper 26.2 / Java 25
+# ================================================================
+# VoidFlame Kits • Production Configuration
+# Paper 26.2 • Java 25
+# ================================================================
+# Kit catalog, validation, saved layouts and editor behavior.
+# Kit catalog and editor settings.
 settings:
   enabled: true
   module: kits
