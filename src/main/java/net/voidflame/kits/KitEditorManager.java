@@ -37,7 +37,7 @@ public final class KitEditorManager implements Listener {
             player.sendMessage(ChatColor.RED + "The kit editor is disabled.");
             return;
         }
-        if (!plugin.catalog().get(kitId).isPresent()) {
+        if (plugin.catalog().get(kitId) == null) {
             player.sendMessage(ChatColor.RED + "Unknown kit.");
             return;
         }
