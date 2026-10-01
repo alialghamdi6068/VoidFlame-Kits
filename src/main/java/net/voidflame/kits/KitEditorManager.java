@@ -120,12 +120,53 @@ public final class KitEditorManager implements Listener {
     }
 
     private java.util.concurrent.CompletableFuture<String> load(UUID uuid, String kit, String layout) {
-        return plugin.get("layouts." + uuid + "." + kit).then(value -> {\n            if (value == null || value.isBlank()) return null;\n            try {\n                byte[] bytes = Base64.getDecoder().decode(value);\n                try (BukkitObjectInputStream in = new BukkitObjectInputStream(new ByteArrayInputStream(bytes))) {\n                    Object object = in.readObject();\n                    if (object instanceof Map<?, ?> map && map.get(layout) instanceof String saved) return saved;\n                }\n            } catch (Exception ex) { plugin.getLogger().warning("Invalid saved layout index: " + ex.getMessage()); }\n            return null;\n        });
+        return plugin.get("layouts." + uuid + "." + kit).thenApply(value -> {
+            if (value == null || value.isBlank()) return null;
+            try {
+                byte[] bytes = Base64.getDecoder().decode(value);
+                try (BukkitObjectInputStream in = new BukkitObjectInputStream(new ByteArrayInputStream(bytes))) {
+                    Object object = in.readObject();
+                    if (object instanceof Map<?, ?> map && map.get(layout) instanceof String saved) return saved;
+                }
+            } catch (Exception ex) {
+                plugin.getLogger().warning("Invalid saved layout index: " + ex.getMessage());
+            }
+            return null;
+        });
     }
 
     private void save(UUID uuid, String kit, String layout, String encoded) {
         if (!plugin.getConfig().getBoolean("settings.saved-layouts-enabled", true)) return;
-        plugin.put("layout." + uuid + "." + kit + "." + layout, encoded).exceptionally(ex -> {
+        plugin.get("layouts." + uuid + "." + kit).thenCompose(existing -> {
+            java.util.LinkedHashMap<String, String> layouts = new java.util.LinkedHashMap<>();
+            if (existing != null && !existing.isBlank()) {
+                try {
+                    byte[] bytes = Base64.getDecoder().decode(existing);
+                    try (BukkitObjectInputStream in = new BukkitObjectInputStream(new ByteArrayInputStream(bytes))) {
+                        Object object = in.readObject();
+                        if (object instanceof Map<?, ?> map) {
+                            map.forEach((k, v) -> {
+                                if (k instanceof String key && v instanceof String value) layouts.put(key, value);
+                            });
+                        }
+                    }
+                } catch (Exception ignored) {
+                }
+            }
+            layouts.remove(layout);
+            layouts.put(layout, encoded);
+            int max = Math.max(1, plugin.getConfig().getInt("settings.max-saved-layouts-per-player", 8));
+            while (layouts.size() > max) layouts.remove(layouts.keySet().iterator().next());
+            try {
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                try (BukkitObjectOutputStream out = new BukkitObjectOutputStream(bytes)) {
+                    out.writeObject(layouts);
+                }
+                return plugin.put("layouts." + uuid + "." + kit, Base64.getEncoder().encodeToString(bytes.toByteArray()));
+            } catch (IOException ex) {
+                return java.util.concurrent.CompletableFuture.<Void>failedFuture(ex);
+            }
+        }).exceptionally(ex -> {
             plugin.getLogger().warning("Failed to persist kit layout: " + ex.getMessage());
             return null;
         });
