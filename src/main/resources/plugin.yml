@@ -11,7 +11,7 @@ depend: [VoidFlame-Core]
 commands:
   kit:
     description: Apply a VoidFlame kit.
-    usage: /kit <name>
+    usage: /kit <name|list|editor <kit> [layout]>
     permission: voidflame.kits
   kits:
     description: List VoidFlame kits.
