@@ -240,7 +240,7 @@ public final class KitService implements net.voidflame.core.api.KitService {
             case 36 -> player.getInventory().setBoots(item);
             case 37 -> player.getInventory().setLeggings(item);
             case 38 -> player.getInventory().setChestplate(item);
-            case 39 -> player.getInventory().setChestplate(item);
+            case 39 -> player.getInventory().setHelmet(item);
             case 40 -> player.getInventory().setItemInOffHand(item);
             default -> { }
         }
