@@ -227,6 +227,8 @@ public final class KitService implements net.voidflame.core.api.KitService {
         }
     }
 
+    public void clearSelected() { selected.clear(); }
+
     public String selected(Player player) {
         return player == null ? null : selected.get(player.getUniqueId());
     }
