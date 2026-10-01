@@ -35,7 +35,7 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
         getCommand("kit").setTabCompleter(commandHandler);
         getCommand("kits").setExecutor(commandHandler);
         getCommand("kits").setTabCompleter(commandHandler);
-        getServer().getPluginManager().registerEvents(new GoldenHeadListener(this), this);\n        getServer().getPluginManager().registerEvents(editor, this);
+        getServer().getPluginManager().registerEvents(new GoldenHeadListener(this), this);\n        getServer().getPluginManager().registerEvents(editor, this);\n        getServer().getPluginManager().registerEvents(new KitDuplicationGuard(this), this);
         getServer().getServicesManager().register(KitCatalog.class, catalog, this, ServicePriority.Normal);
         getServer().getServicesManager().register(net.voidflame.core.api.KitService.class, kitService, this, ServicePriority.Normal);
         getLogger().info("VoidFlame-Kits enabled with canonical kit catalog.");
