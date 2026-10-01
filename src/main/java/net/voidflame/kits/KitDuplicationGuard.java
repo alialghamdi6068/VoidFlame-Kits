@@ -1,7 +1,7 @@
 package net.voidflame.kits;
 
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.Player;\nimport org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -22,7 +22,7 @@ public final class KitDuplicationGuard implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onClick(InventoryClickEvent event) {
         if (!plugin.getConfig().getBoolean("settings.prevent-duplication", true)) return;
-        if (!(event.getWhoClicked() instanceof Player)) return;
+        if (!(event.getWhoClicked() instanceof Player)) return;\n        if (event.getView().getTitle().startsWith(ChatColor.DARK_PURPLE + "Kit Editor:")) return;\n        if (event.getView().getTitle().startsWith(ChatColor.DARK_PURPLE + "Kit Editor:")) return;
         if (event.getClickedInventory() == null) return;
         if (event.getClickedInventory().equals(event.getView().getBottomInventory())) return;
 
