@@ -96,36 +96,14 @@ public final class KitEditorManager implements Listener {
 
         int raw = event.getRawSlot();
 
-        // Bottom/player inventory is intentionally untouched so normal item movement works
-        // while the editor is open.
-        if (event.getClickedInventory() == event.getView().getBottomInventory()) return;
-
-        event.setCancelled(true);
-
         if (raw < 0 || raw >= SIZE) return;
 
-        if (raw < EDITABLE_SLOTS) {
-            // Vanilla-like pickup/place behavior inside the editor.
-            if (event.getClick() == ClickType.DOUBLE_CLICK
-                    || event.getClick().isShiftClick()
-                    || event.getClick().isKeyboardClick()
-                    || event.getClick().isCreativeAction()) {
-                return;
-            }
+        // The 41 editable slots behave like a real inventory. This fixes the old
+        // editor where clicks/dragging were cancelled and items could not actually
+        // be rearranged. Only the control row is protected.
+        if (raw < EDITABLE_SLOTS) return;
 
-            ItemStack current = event.getInventory().getItem(raw);
-            ItemStack cursor = event.getCursor();
-
-            if (cursor == null || cursor.getType() == Material.AIR) {
-                event.setCursor(current == null ? null : current.clone());
-                event.getInventory().setItem(raw, null);
-            } else {
-                event.setCursor(current == null ? null : current.clone());
-                event.getInventory().setItem(raw, cursor.clone());
-            }
-            player.updateInventory();
-            return;
-        }
+        event.setCancelled(true);
 
         if (raw == 45) {
             saveSession(player);
@@ -141,7 +119,14 @@ public final class KitEditorManager implements Listener {
     public void onDrag(InventoryDragEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return;
         if (!(event.getView().getTopInventory().getHolder() instanceof Holder)) return;
-        event.setCancelled(true);
+        // Allow normal dragging across editable slots; cancel only if the drag
+        // touches the protected control row.
+        for (int raw : event.getRawSlots()) {
+            if (raw >= EDITABLE_SLOTS) {
+                event.setCancelled(true);
+                return;
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
