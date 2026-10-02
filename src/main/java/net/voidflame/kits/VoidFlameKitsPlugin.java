@@ -79,7 +79,8 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
                 if (icon != null) catalog.setIcon(id, icon);
                 catalog.setEnabled(id, Boolean.parseBoolean(p[3]));
                 try { catalog.setOrder(id, Integer.parseInt(p[4])); } catch (NumberFormatException ignored) {}
-                if (p.length >= 6) catalog.setLore(id, Arrays.asList(p[5].split("~", -1)));
+                if (p.length >= 6) catalog.setSlot(id, parseInt(p[5], catalog.slot(id)));
+                if (p.length >= 7) catalog.setLore(id, Arrays.asList(p[6].split("~", -1)));
             }
         });
     }
@@ -105,6 +106,8 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
         saveConfig();
         return put("settings.default-kit", kit.toLowerCase(java.util.Locale.ROOT));
     }
+
+    private int parseInt(String value, int fallback) { try { return Integer.parseInt(value); } catch (NumberFormatException ignored) { return fallback; } }
 
     public CompletableFuture<Void> put(String key, String value) {
         return storage.put("kits", key, value);
