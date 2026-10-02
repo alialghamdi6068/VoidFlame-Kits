@@ -12,6 +12,7 @@ public final class KitCatalog {
     private final Map<String, String> displayNames = new ConcurrentHashMap<>();
     private final Map<String, Material> icons = new ConcurrentHashMap<>();
     private final Map<String, Integer> orders = new ConcurrentHashMap<>();
+    private final Map<String, Integer> slots = new ConcurrentHashMap<>();
     private final Map<String, List<String>> lores = new ConcurrentHashMap<>();
 
     public KitCatalog() { registerDefaults(); }
@@ -32,6 +33,7 @@ public final class KitCatalog {
     }
     public Material icon(String id) { return icons.getOrDefault(id.toLowerCase(Locale.ROOT), Material.NAME_TAG); }
     public int order(String id) { return orders.getOrDefault(id.toLowerCase(Locale.ROOT), 0); }
+    public int slot(String id) { return slots.getOrDefault(id.toLowerCase(Locale.ROOT), -1); }
     public List<String> lore(String id) { return List.copyOf(lores.getOrDefault(id.toLowerCase(Locale.ROOT), List.of())); }
 
     public synchronized boolean add(String id) {
@@ -42,6 +44,7 @@ public final class KitCatalog {
         displayNames.put(normalized, normalized.replace('_', ' '));
         icons.put(normalized, Material.NAME_TAG);
         orders.put(normalized, definitions.size());
+        slots.put(normalized, 10 + ((definitions.size() - 1) % 28) + (((definitions.size() - 1) / 7) * 2));
         lores.put(normalized, new ArrayList<>());
         disabled.add(normalized);
         return true;
@@ -55,6 +58,7 @@ public final class KitCatalog {
         displayNames.remove(normalized);
         icons.remove(normalized);
         orders.remove(normalized);
+        slots.remove(normalized);
         lores.remove(normalized);
         return true;
     }
@@ -66,6 +70,7 @@ public final class KitCatalog {
     public void setDisplayName(String id, String value) { displayNames.put(id.toLowerCase(Locale.ROOT), value); }
     public void setIcon(String id, Material value) { if (value != null) icons.put(id.toLowerCase(Locale.ROOT), value); }
     public void setOrder(String id, int value) { orders.put(id.toLowerCase(Locale.ROOT), value); }
+    public void setSlot(String id, int value) { slots.put(id.toLowerCase(Locale.ROOT), Math.max(0, Math.min(53, value))); }
     public void setLore(String id, List<String> value) { lores.put(id.toLowerCase(Locale.ROOT), new ArrayList<>(value == null ? List.of() : value)); }
 
     private void registerDefaults() {
@@ -74,6 +79,7 @@ public final class KitCatalog {
             displayNames.put(id, id.replace('_', ' '));
             icons.put(id, Material.NAME_TAG);
             orders.put(id, definitions.size());
+            slots.put(id, 10 + ((definitions.size() - 1) % 7) + (((definitions.size() - 1) / 7) * 9));
             lores.put(id, new ArrayList<>());
         }
         definitions.put("uhc", KitDefinition.uhc());
