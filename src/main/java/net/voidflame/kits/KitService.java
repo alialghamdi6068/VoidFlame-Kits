@@ -23,10 +23,20 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Base64;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.util.io.BukkitObjectInputStream;
 
-public final class KitService implements net.voidflame.core.api.KitService {
+public final class KitService implements net.voidflame.core.api.KitService, Listener {
     private final VoidFlameKitsPlugin plugin;
     private final Map<UUID, String> selected = new HashMap<>();
+    private final Map<String, ItemStack[]> serverLayouts = new ConcurrentHashMap<>();
+    private final Map<UUID, Map<String, ItemStack[]>> personalLayouts = new ConcurrentHashMap<>();
     private final NamespacedKey goldenHeadKey;
     private final NamespacedKey kitItemKey;
 
@@ -42,16 +52,29 @@ public final class KitService implements net.voidflame.core.api.KitService {
         String kitId = id.toLowerCase(Locale.ROOT);
         if (plugin.catalog().get(kitId) == null) return false;
 
+        ItemStack[] custom = null;
+        Map<String, ItemStack[]> personal = personalLayouts.get(player.getUniqueId());
+        if (personal != null) custom = personal.get(kitId);
+        if (custom == null) custom = serverLayouts.get(kitId);
+
+        if (custom != null) {
+            clearInventory(player);
+            for (int slot = 0; slot < Math.min(41, custom.length); slot++) {
+                ItemStack item = custom[slot];
+                if (item != null && item.getType() != Material.AIR) setSlot(player, slot, item.clone());
+            }
+            selected.put(player.getUniqueId(), kitId);
+            logApply(player, kitId);
+            return true;
+        }
+
         ConfigurationSection root = plugin.getConfig().getConfigurationSection("kits." + kitId);
         if (root == null) {
             plugin.getLogger().warning("Missing loadout configuration for kit '" + kitId + "'.");
             return false;
         }
 
-        player.getInventory().clear();
-        player.getInventory().setArmorContents(new ItemStack[4]);
-        player.getInventory().setItemInOffHand(new ItemStack(Material.AIR));
-        player.setItemOnCursor(new ItemStack(Material.AIR));
+        clearInventory(player);
 
         ConfigurationSection items = root.getConfigurationSection("items");
         if (items != null) {
@@ -73,11 +96,92 @@ public final class KitService implements net.voidflame.core.api.KitService {
         if (offhand != null) player.getInventory().setItemInOffHand(offhand);
 
         selected.put(player.getUniqueId(), kitId);
-        var registration = org.bukkit.Bukkit.getServicesManager().getRegistration(net.voidflame.core.api.AuditLogService.class);
+        logApply(player, kitId);
         if (registration != null && registration.getProvider() != null) {
             registration.getProvider().log(player.getUniqueId().toString(), "KIT_APPLY", player.getName(), "kit=" + kitId);
         }
         return true;
+    }
+
+    private void clearInventory(Player player) {
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(new ItemStack[4]);
+        player.getInventory().setItemInOffHand(new ItemStack(Material.AIR));
+        player.setItemOnCursor(new ItemStack(Material.AIR));
+    }
+
+    private void logApply(Player player, String kitId) {
+        var registration = org.bukkit.Bukkit.getServicesManager().getRegistration(net.voidflame.core.api.AuditLogService.class);
+        if (registration != null && registration.getProvider() != null) {
+            registration.getProvider().log(player.getUniqueId().toString(), "KIT_APPLY", player.getName(), "kit=" + kitId);
+        }
+    }
+
+    public void cacheServerLayout(String kitId, String encoded) {
+        ItemStack[] decoded = decodeLayout(encoded);
+        if (decoded != null) serverLayouts.put(kitId.toLowerCase(Locale.ROOT), decoded);
+    }
+
+    public void cachePersonalLayout(UUID playerId, String kitId, String encoded) {
+        ItemStack[] decoded = decodeLayout(encoded);
+        if (decoded != null) {
+            personalLayouts.computeIfAbsent(playerId, ignored -> new ConcurrentHashMap<>())
+                    .put(kitId.toLowerCase(Locale.ROOT), decoded);
+        }
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        UUID uuid = event.getPlayer().getUniqueId();
+        for (String kit : plugin.catalog().kits()) {
+            final String key = "layouts." + uuid + "." + kit;
+            plugin.get(key).thenAccept(value -> {
+                if (value == null || value.isBlank()) return;
+                try {
+                    byte[] bytes = Base64.getDecoder().decode(value);
+                    try (BukkitObjectInputStream in = new BukkitObjectInputStream(new ByteArrayInputStream(bytes))) {
+                        Object object = in.readObject();
+                        if (object instanceof Map<?, ?> map && map.get("default") instanceof String encoded) {
+                            cachePersonalLayout(uuid, kit, encoded);
+                        }
+                    }
+                } catch (Exception ignored) {
+                }
+            });
+        }
+    }
+
+    public void loadServerLayouts() {
+        for (String kit : plugin.catalog().kits()) {
+            plugin.get("admin-layouts." + kit).thenAccept(value -> {
+                if (value == null || value.isBlank()) return;
+                try {
+                    byte[] bytes = Base64.getDecoder().decode(value);
+                    try (BukkitObjectInputStream in = new BukkitObjectInputStream(new ByteArrayInputStream(bytes))) {
+                        Object object = in.readObject();
+                        if (object instanceof Map<?, ?> map && map.get("server") instanceof String encoded) {
+                            cacheServerLayout(kit, encoded);
+                        }
+                    }
+                } catch (Exception ignored) {
+                }
+            });
+        }
+    }
+
+    private ItemStack[] decodeLayout(String encoded) {
+        try {
+            byte[] bytes = Base64.getDecoder().decode(encoded);
+            try (BukkitObjectInputStream in = new BukkitObjectInputStream(new ByteArrayInputStream(bytes))) {
+                Object value = in.readObject();
+                if (!(value instanceof ItemStack[] items) || items.length != 41) return null;
+                ItemStack[] copy = new ItemStack[41];
+                for (int i = 0; i < 41; i++) copy[i] = items[i] == null ? null : items[i].clone();
+                return copy;
+            }
+        } catch (IOException | ClassNotFoundException | IllegalArgumentException ex) {
+            return null;
+        }
     }
 
     public List<String> validateConfiguration() {
@@ -254,7 +358,7 @@ public final class KitService implements net.voidflame.core.api.KitService {
         return true;
     }
 
-    public void clearSelected() { selected.clear(); }
+    public void clearSelected() { selected.clear(); personalLayouts.clear(); serverLayouts.clear(); }
 
     public String selected(Player player) {
         return player == null ? null : selected.get(player.getUniqueId());
