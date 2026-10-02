@@ -212,10 +212,10 @@ public final class KitEditorManager implements Listener {
 
     private void copyPlayerInventory(Player player, Inventory target) {
         for (int i = 0; i < 36; i++) target.setItem(i, cloneOrNull(player.getInventory().getItem(i)));
-        target.setItem(36, cloneOrNull(player.getInventory().getHelmet()));
-        target.setItem(37, cloneOrNull(player.getInventory().getChestplate()));
-        target.setItem(38, cloneOrNull(player.getInventory().getLeggings()));
-        target.setItem(39, cloneOrNull(player.getInventory().getBoots()));
+        target.setItem(36, cloneOrNull(player.getInventory().getBoots()));
+        target.setItem(37, cloneOrNull(player.getInventory().getLeggings()));
+        target.setItem(38, cloneOrNull(player.getInventory().getChestplate()));
+        target.setItem(39, cloneOrNull(player.getInventory().getHelmet()));
         target.setItem(40, cloneOrNull(player.getInventory().getItemInOffHand()));
     }
 
