@@ -79,9 +79,7 @@ public final class KitAdminMenu implements Listener {
 
         int slot = event.getRawSlot();
         if (slot == 46) {
-            player.closeInventory();
-            pendingCreate.put(player.getUniqueId(), "create");
-            player.sendMessage(ChatColor.LIGHT_PURPLE + "Enter the new kit ID in chat. Use only letters, numbers and underscores.");
+            openCreate(player);
             return;
         }
         if (slot == 49) { player.closeInventory(); return; }
@@ -119,6 +117,11 @@ public final class KitAdminMenu implements Listener {
 
         plugin.settingsMenu().open(player, kit);
     }
+
+    private void openCreate(Player player) { Inventory inv=Bukkit.createInventory(new CreateHolder(), org.bukkit.event.inventory.InventoryType.ANVIL, TITLE+" • Create"); ItemStack item=new ItemStack(Material.NAME_TAG); ItemMeta meta=item.getItemMeta(); if(meta!=null){meta.setDisplayName("new_kit");item.setItemMeta(meta);} inv.setItem(0,item); player.openInventory(inv); }
+
+    @EventHandler
+    public void onCreate(InventoryClickEvent event) { if(!(event.getWhoClicked() instanceof Player player))return; if(!(event.getView().getTopInventory().getHolder() instanceof CreateHolder))return; if(event.getRawSlot()!=2)return; event.setCancelled(true); ItemStack result=event.getView().getTopInventory().getItem(2); if(result==null||!result.hasItemMeta())return; String id=ChatColor.stripColor(result.getItemMeta().getDisplayName()).trim().toLowerCase(Locale.ROOT).replace(" ","_"); if(!plugin.catalog().add(id)){player.sendMessage(ChatColor.RED+"Invalid or duplicate kit ID.");return;} plugin.catalog().setEnabled(id,false); plugin.saveCatalog(); plugin.settingsMenu().open(player,id); }
 
     @EventHandler
     public void onDrag(InventoryDragEvent event) {
@@ -162,7 +165,7 @@ public final class KitAdminMenu implements Listener {
         return item;
     }
 
-    private static final class Holder implements InventoryHolder {
+    private static final class CreateHolder implements InventoryHolder { @Override public Inventory getInventory() { return null; } }\n\n    private static final class Holder implements InventoryHolder {
         @Override public Inventory getInventory() { return null; }
     }
 }
