@@ -40,6 +40,8 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
         getCommand("kits").setExecutor(commandHandler);
         getCommand("kits").setTabCompleter(commandHandler);
         getServer().getPluginManager().registerEvents(new GoldenHeadListener(this), this);
+        getServer().getPluginManager().registerEvents(kitService, this);
+        kitService.loadServerLayouts();
         getServer().getPluginManager().registerEvents(editor, this);
         getServer().getPluginManager().registerEvents(adminMenu, this);
         getServer().getPluginManager().registerEvents(new KitDuplicationGuard(this), this);
