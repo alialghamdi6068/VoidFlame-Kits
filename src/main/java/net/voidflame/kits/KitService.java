@@ -98,9 +98,6 @@ public final class KitService implements net.voidflame.core.api.KitService, List
 
         selected.put(player.getUniqueId(), kitId);
         logApply(player, kitId);
-        if (registration != null && registration.getProvider() != null) {
-            registration.getProvider().log(player.getUniqueId().toString(), "KIT_APPLY", player.getName(), "kit=" + kitId);
-        }
         return true;
     }
 
