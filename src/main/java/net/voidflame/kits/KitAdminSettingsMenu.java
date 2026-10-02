@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -37,11 +38,11 @@ public final class KitAdminSettingsMenu implements Listener {
         e.setCancelled(true); if(e.getClickedInventory()!=e.getView().getTopInventory())return; String k=h.kit();
         switch(e.getRawSlot()){
             case 10->plugin.editor().openAdmin(p,k);
-            case 11->p.performCommand("kit admin");
-            case 12->p.sendMessage("§dKit Lore §7» §fUse the catalog configuration for lore lines: "+String.join(" | ",plugin.catalog().lore(k)));
-            case 13->p.sendMessage("§dKit Icon §7» §fCurrent: "+plugin.catalog().icon(k).name());
-            case 14->p.sendMessage("§dKit Order §7» §fCurrent: "+plugin.catalog().order(k));
-            case 15->{String id=k+"_copy"; if(plugin.catalog().add(id)){plugin.catalog().setDisplayName(id,plugin.catalog().displayName(k)+" Copy");plugin.catalog().setIcon(id,plugin.catalog().icon(k));plugin.catalog().setLore(id,plugin.catalog().lore(k));plugin.catalog().setOrder(id,plugin.catalog().order(k)+1);plugin.catalog().setEnabled(id,false);plugin.saveCatalog();open(p,id);} }
+            case 11->input(p,k,"RENAME",plugin.catalog().displayName(k));
+            case 12->input(p,k,"LORE",String.join("|",plugin.catalog().lore(k)));
+            case 13->icons(p,k);
+            case 14->input(p,k,"ORDER",Integer.toString(plugin.catalog().order(k)));
+            case 15->input(p,k,"DUPLICATE",k+"_copy");
             case 16->{plugin.catalog().setEnabled(k,!plugin.catalog().enabled(k));plugin.saveCatalog();open(p,k);}
             case 19->{plugin.setDefaultKit(k);open(p,k);}
             case 20->p.sendMessage("§5VOIDFLAME §8» §f"+plugin.catalog().displayName(k)+" §7| "+String.join(" §8/ ",plugin.catalog().lore(k)));
@@ -49,8 +50,13 @@ public final class KitAdminSettingsMenu implements Listener {
             case 49->p.performCommand("kit admin"); case 53->p.closeInventory(); default->{}
         }
     }
+
+    private void input(Player p,String kit,String mode,String initial){Inventory i=Bukkit.createInventory(new InputHolder(kit,mode),InventoryType.ANVIL,"§8VoidFlame §7• §5"+mode);ItemStack x=new ItemStack(Material.PAPER);ItemMeta m=x.getItemMeta();if(m!=null){m.setDisplayName(initial);x.setItemMeta(m);}i.setItem(0,x);p.openInventory(i);}
+    private void icons(Player p,String kit){Inventory i=Bukkit.createInventory(new IconHolder(kit),54,"§8VoidFlame §7• §5Kit Icon");for(int s=0;s<54;s++)i.setItem(s,item(Material.BLACK_STAINED_GLASS_PANE," "));int s=10;for(Material m:Material.values()){if(!m.isItem())continue;i.setItem(s++,new ItemStack(m));if(s>=44)break;}i.setItem(49,item(Material.ARROW,"§7§lBACK"));p.openInventory(i);}
+    @EventHandler public void inputClick(InventoryClickEvent e){if(!(e.getWhoClicked() instanceof Player p)||!(e.getView().getTopInventory().getHolder() instanceof InputHolder h)||e.getRawSlot()!=2)return;e.setCancelled(true);ItemStack x=e.getView().getTopInventory().getItem(2);if(x==null||!x.hasItemMeta())return;String v=org.bukkit.ChatColor.stripColor(x.getItemMeta().getDisplayName()).trim();if(v.isBlank())return;String k=h.kit();switch(h.mode()){case "RENAME"->plugin.catalog().setDisplayName(k,v);case "LORE"->plugin.catalog().setLore(k,java.util.Arrays.stream(v.split("\\|")).map(String::trim).filter(z->!z.isBlank()).limit(8).toList());case "ORDER"->{try{plugin.catalog().setOrder(k,Integer.parseInt(v));}catch(NumberFormatException ex){p.sendMessage("§cOrder must be a number.");return;}}case "DUPLICATE"->{String id=v.toLowerCase(java.util.Locale.ROOT).replace(' ','_');if(!plugin.catalog().add(id)){p.sendMessage("§cInvalid or duplicate kit ID.");return;}plugin.catalog().setDisplayName(id,plugin.catalog().displayName(k)+" Copy");plugin.catalog().setIcon(id,plugin.catalog().icon(k));plugin.catalog().setLore(id,plugin.catalog().lore(k));plugin.catalog().setEnabled(id,false);plugin.saveCatalog();open(p,id);return;}default->{} }plugin.saveCatalog();open(p,k);}
+    @EventHandler public void iconClick(InventoryClickEvent e){if(!(e.getWhoClicked() instanceof Player p)||!(e.getView().getTopInventory().getHolder() instanceof IconHolder h))return;e.setCancelled(true);if(e.getRawSlot()==49){open(p,h.kit());return;}ItemStack x=e.getCurrentItem();if(x==null||!x.getType().isItem())return;plugin.catalog().setIcon(h.kit(),x.getType());plugin.saveCatalog();open(p,h.kit());}
     @EventHandler public void drag(InventoryDragEvent e){if(e.getView().getTopInventory().getHolder() instanceof Holder)e.setCancelled(true);}
     private void button(Inventory i,int s,Material m,String n,String...l){i.setItem(s,item(m,n,l));}
     private ItemStack item(Material m,String n,String...l){ItemStack x=new ItemStack(m);ItemMeta z=x.getItemMeta();if(z!=null){z.setDisplayName(n);z.setLore(List.of(l));x.setItemMeta(z);}return x;}
-    private record Holder(String kit) implements InventoryHolder{public Inventory getInventory(){return null;}}
+    private record Holder(String kit) implements InventoryHolder{public Inventory getInventory(){return null;}}\n    private record InputHolder(String kit,String mode) implements InventoryHolder{public Inventory getInventory(){return null;}}\n    private record IconHolder(String kit) implements InventoryHolder{public Inventory getInventory(){return null;}}
 }
