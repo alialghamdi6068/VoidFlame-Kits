@@ -42,6 +42,18 @@ public final class KitEditorManager implements Listener {
     }
 
     public void open(Player player, String kitId, String layoutName) {
+        openInternal(player, kitId, layoutName, false);
+    }
+
+    public void openAdmin(Player player, String kitId) {
+        if (!player.hasPermission("voidflame.kits.manage")) {
+            player.sendMessage(ChatColor.RED + "You do not have permission to manage kits.");
+            return;
+        }
+        openInternal(player, kitId, "server", true);
+    }
+
+    private void openInternal(Player player, String kitId, String layoutName, boolean admin) {
         if (!plugin.getConfig().getBoolean("settings.editor-enabled", true)) {
             player.sendMessage(ChatColor.RED + "The kit editor is disabled.");
             return;
@@ -61,7 +73,7 @@ public final class KitEditorManager implements Listener {
                 color(TITLE_PREFIX + pretty(kitId) + " &8/ &f" + normalized)
         );
 
-        load(player.getUniqueId(), kitId, normalized).thenAccept(encoded ->
+        load(player.getUniqueId(), kitId, normalized, admin).thenAccept(encoded ->
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     if (!player.isOnline()) return;
 
@@ -70,7 +82,7 @@ public final class KitEditorManager implements Listener {
 
                     decorate(inv, kitId, normalized);
                     sessions.put(player.getUniqueId(),
-                            new KitEditorSession(player.getUniqueId(), kitId, normalized, inv));
+                            new KitEditorSession(player.getUniqueId(), kitId, normalized, inv, admin));
                     saved.remove(player.getUniqueId());
                     player.openInventory(inv);
                 }));
@@ -155,7 +167,7 @@ public final class KitEditorManager implements Listener {
 
         try {
             String encoded = serialize(session.inventory());
-            save(player.getUniqueId(), session.kitId(), session.layoutName(), encoded);
+            save(session, encoded);
             saved.add(player.getUniqueId());
             player.sendMessage(color("&a&lSAVED &8» &f" + pretty(session.kitId())
                     + " &7(" + session.layoutName() + ")"));
@@ -171,7 +183,7 @@ public final class KitEditorManager implements Listener {
         KitEditorSession session = sessions.get(player.getUniqueId());
         if (session == null) return;
 
-        load(player.getUniqueId(), session.kitId(), session.layoutName()).thenAccept(encoded ->
+        load(session.playerId(), session.kitId(), session.layoutName(), session.admin()).thenAccept(encoded ->
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     if (!player.isOnline() || sessions.get(player.getUniqueId()) != session) return;
                     if (encoded != null) {
@@ -253,8 +265,9 @@ public final class KitEditorManager implements Listener {
         }
     }
 
-    private java.util.concurrent.CompletableFuture<String> load(UUID uuid, String kit, String layout) {
-        return plugin.get("layouts." + uuid + "." + kit).thenApply(value -> {
+    private java.util.concurrent.CompletableFuture<String> load(UUID uuid, String kit, String layout, boolean admin) {
+        String storageKey = admin ? "admin-layouts." + kit : "layouts." + uuid + "." + kit;
+        return plugin.get(storageKey).thenApply(value -> {
             if (value == null || value.isBlank()) return null;
             try {
                 byte[] bytes = Base64.getDecoder().decode(value);
@@ -272,10 +285,14 @@ public final class KitEditorManager implements Listener {
         });
     }
 
-    private void save(UUID uuid, String kit, String layout, String encoded) {
+    private void save(KitEditorSession session, String encoded) {
+        UUID uuid = session.playerId();
+        String kit = session.kitId();
+        String layout = session.layoutName();
+        String storageKey = session.admin() ? "admin-layouts." + kit : "layouts." + uuid + "." + kit;
         if (!plugin.getConfig().getBoolean("settings.saved-layouts-enabled", true)) return;
 
-        plugin.get("layouts." + uuid + "." + kit).thenCompose(existing -> {
+        plugin.get(storageKey).thenCompose(existing -> {
             java.util.LinkedHashMap<String, String> layouts = new java.util.LinkedHashMap<>();
 
             if (existing != null && !existing.isBlank()) {
@@ -310,7 +327,7 @@ public final class KitEditorManager implements Listener {
                 try (BukkitObjectOutputStream out = new BukkitObjectOutputStream(bytes)) {
                     out.writeObject(layouts);
                 }
-                return plugin.put("layouts." + uuid + "." + kit,
+                return plugin.put(storageKey,
                         Base64.getEncoder().encodeToString(bytes.toByteArray()));
             } catch (IOException ex) {
                 return java.util.concurrent.CompletableFuture.<Void>failedFuture(ex);
