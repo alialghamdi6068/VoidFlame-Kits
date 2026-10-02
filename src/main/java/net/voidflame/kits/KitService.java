@@ -50,7 +50,7 @@ public final class KitService implements net.voidflame.core.api.KitService, List
     public boolean apply(Player player, String id) {
         if (player == null || id == null) return false;
         String kitId = id.toLowerCase(Locale.ROOT);
-        if (plugin.catalog().get(kitId) == null) return false;
+        if (plugin.catalog().get(kitId) == null || !plugin.catalog().enabled(kitId)) return false;
 
         ItemStack[] custom = null;
         Map<String, ItemStack[]> personal = personalLayouts.get(player.getUniqueId());
@@ -132,6 +132,10 @@ public final class KitService implements net.voidflame.core.api.KitService, List
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+        String defaultKit = plugin.defaultKit();
+        if (plugin.catalog().exists(defaultKit) && plugin.catalog().enabled(defaultKit)) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> apply(event.getPlayer(), defaultKit), 1L);
+        }
         UUID uuid = event.getPlayer().getUniqueId();
         for (String kit : plugin.catalog().kits()) {
             final String key = "layouts." + uuid + "." + kit;
