@@ -17,6 +17,10 @@ commands:
     description: List VoidFlame kits.
     usage: /kits
     permission: voidflame.kits
+  kitadmin:
+    description: Open the VoidFlame kit administration GUI.
+    usage: /kitadmin [gui]
+    permission: voidflame.kits.manage
 
 permissions:
   voidflame.kits:
