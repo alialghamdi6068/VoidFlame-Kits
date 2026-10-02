@@ -117,7 +117,7 @@ public final class KitAdminMenu implements Listener {
             return;
         }
 
-        plugin.editor().openAdmin(player, kit);
+        plugin.settingsMenu().open(player, kit);
     }
 
     @EventHandler
