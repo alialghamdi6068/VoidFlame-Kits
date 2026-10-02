@@ -58,5 +58,6 @@ public final class KitAdminSettingsMenu implements Listener {
     @EventHandler public void drag(InventoryDragEvent e){if(e.getView().getTopInventory().getHolder() instanceof Holder)e.setCancelled(true);}
     private void button(Inventory i,int s,Material m,String n,String...l){i.setItem(s,item(m,n,l));}
     private ItemStack item(Material m,String n,String...l){ItemStack x=new ItemStack(m);ItemMeta z=x.getItemMeta();if(z!=null){z.setDisplayName(n);z.setLore(List.of(l));x.setItemMeta(z);}return x;}
-    private record Holder(String kit) implements InventoryHolder{public Inventory getInventory(){return null;}}\n    private record InputHolder(String kit,String mode) implements InventoryHolder{public Inventory getInventory(){return null;}}\n    private record IconHolder(String kit) implements InventoryHolder{public Inventory getInventory(){return null;}}
+    private record Holder(String kit) implements InventoryHolder{public Inventory getInventory(){return null;}}
+    private record InputHolder(String kit,String mode) implements InventoryHolder{public Inventory getInventory(){return null;}}\n    private record IconHolder(String kit) implements InventoryHolder{public Inventory getInventory(){return null;}}
 }
