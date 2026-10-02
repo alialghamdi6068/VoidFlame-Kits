@@ -1,6 +1,7 @@
 package net.voidflame.kits;
 
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.configuration.ConfigurationSection;
@@ -132,11 +133,18 @@ public final class KitService implements net.voidflame.core.api.KitService, List
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        String defaultKit = plugin.defaultKit();
-        if (plugin.catalog().exists(defaultKit) && plugin.catalog().enabled(defaultKit)) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> apply(event.getPlayer(), defaultKit), 1L);
-        }
         UUID uuid = event.getPlayer().getUniqueId();
+        plugin.get("players.default-applied." + uuid).thenAccept(marker -> {
+            if (marker != null && !marker.isBlank()) return;
+            plugin.put("players.default-applied." + uuid, Long.toString(System.currentTimeMillis()));
+            String defaultKit = plugin.defaultKit();
+            if (plugin.catalog().exists(defaultKit) && plugin.catalog().enabled(defaultKit)) {
+                Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                    if (event.getPlayer().isOnline()) apply(event.getPlayer(), defaultKit);
+                }, 2L);
+            }
+        });
+
         for (String kit : plugin.catalog().kits()) {
             final String key = "layouts." + uuid + "." + kit;
             plugin.get(key).thenAccept(value -> {
@@ -367,6 +375,9 @@ public final class KitService implements net.voidflame.core.api.KitService, List
 
     @Override
     public List<String> listIds() { return plugin.catalog().kits(); }
+
+    @Override
+    public boolean isEnabled(String kitId) { return plugin.catalog().enabled(kitId); }
 
     public void clearSelected() { selected.clear(); personalLayouts.clear(); serverLayouts.clear(); }
 
