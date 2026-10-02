@@ -72,6 +72,7 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
                 String[] p = line.split("\\|", -1);
                 if (p.length < 5) continue;
                 String id = p[0].toLowerCase(java.util.Locale.ROOT);
+                if (!KitCatalog.KITS.contains(id)) continue;
                 if (!catalog.exists(id)) catalog.add(id);
                 catalog.setDisplayName(id, p[1].isBlank() ? id.replace('_', ' ') : p[1]);
                 Material icon = Material.matchMaterial(p[2]);
