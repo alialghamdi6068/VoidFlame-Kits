@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class KitCatalog {
-    public static final List<String> KITS = List.of("sword","axe","uhc","mace","crystal","netherite_pot","smp","spear_mace");
+    public static final List<String> KITS = List.of("sword","axe","uhc","mace","spear_mace","crystal");
 
     private final Map<String, KitDefinition> definitions = new LinkedHashMap<>();
     private final Set<String> disabled = ConcurrentHashMap.newKeySet();
