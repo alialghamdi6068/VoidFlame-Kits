@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.Material;
+import java.util.Arrays;
 
 public final class VoidFlameKitsPlugin extends JavaPlugin {
     private StorageService storage;
@@ -74,6 +75,7 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
                 if (icon != null) catalog.setIcon(id, icon);
                 catalog.setEnabled(id, Boolean.parseBoolean(p[3]));
                 try { catalog.setOrder(id, Integer.parseInt(p[4])); } catch (NumberFormatException ignored) {}
+                if (p.length >= 6) catalog.setLore(id, Arrays.asList(p[5].split("~", -1)));
             }
         });
     }
