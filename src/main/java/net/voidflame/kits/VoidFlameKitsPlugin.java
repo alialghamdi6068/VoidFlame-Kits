@@ -6,6 +6,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.concurrent.CompletableFuture;
+import org.bukkit.Material;
 
 public final class VoidFlameKitsPlugin extends JavaPlugin {
     private StorageService storage;
@@ -23,6 +24,7 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
             return;
         }
         catalog = new KitCatalog();
+        loadCatalog();
         kitService = new KitService(this);
         editor = new KitEditorManager(this);
         adminMenu = new KitAdminMenu(this);
@@ -56,6 +58,46 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
         if (registration == null || registration.getProvider() == null) return false;
         storage = registration.getProvider();
         return true;
+    }
+
+
+    private void loadCatalog() {
+        get("admin-catalog").thenAccept(raw -> {
+            if (raw == null || raw.isBlank()) return;
+            for (String line : raw.split("\\n")) {
+                String[] p = line.split("\\|", -1);
+                if (p.length < 5) continue;
+                String id = p[0].toLowerCase(java.util.Locale.ROOT);
+                if (!catalog.exists(id)) catalog.add(id);
+                catalog.setDisplayName(id, p[1].isBlank() ? id.replace('_', ' ') : p[1]);
+                Material icon = Material.matchMaterial(p[2]);
+                if (icon != null) catalog.setIcon(id, icon);
+                catalog.setEnabled(id, Boolean.parseBoolean(p[3]));
+                try { catalog.setOrder(id, Integer.parseInt(p[4])); } catch (NumberFormatException ignored) {}
+            }
+        });
+    }
+
+    public CompletableFuture<Void> saveCatalog() {
+        StringBuilder out = new StringBuilder();
+        for (String id : catalog.kits()) {
+            out.append(id).append('|')
+                    .append(catalog.displayName(id).replace("|", "/")).append('|')
+                    .append(catalog.icon(id).name()).append('|')
+                    .append(catalog.enabled(id)).append('|')
+                    .append(catalog.order(id)).append('\n');
+        }
+        return put("admin-catalog", out.toString());
+    }
+
+    public String defaultKit() {
+        return getConfig().getString("settings.default-kit", "sword").toLowerCase(java.util.Locale.ROOT);
+    }
+
+    public CompletableFuture<Void> setDefaultKit(String kit) {
+        getConfig().set("settings.default-kit", kit.toLowerCase(java.util.Locale.ROOT));
+        saveConfig();
+        return put("settings.default-kit", kit.toLowerCase(java.util.Locale.ROOT));
     }
 
     public CompletableFuture<Void> put(String key, String value) {
