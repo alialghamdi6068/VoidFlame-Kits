@@ -165,7 +165,9 @@ public final class KitAdminMenu implements Listener {
         return item;
     }
 
-    private static final class CreateHolder implements InventoryHolder { @Override public Inventory getInventory() { return null; } }\n\n    private static final class Holder implements InventoryHolder {
+    private static final class CreateHolder implements InventoryHolder { @Override public Inventory getInventory() { return null; } }
+
+    private static final class Holder implements InventoryHolder {
         @Override public Inventory getInventory() { return null; }
     }
 }
