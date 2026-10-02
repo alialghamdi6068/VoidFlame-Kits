@@ -12,6 +12,7 @@ public final class KitCatalog {
     private final Map<String, String> displayNames = new ConcurrentHashMap<>();
     private final Map<String, Material> icons = new ConcurrentHashMap<>();
     private final Map<String, Integer> orders = new ConcurrentHashMap<>();
+    private final Map<String, List<String>> lores = new ConcurrentHashMap<>();
 
     public KitCatalog() { registerDefaults(); }
 
@@ -31,6 +32,7 @@ public final class KitCatalog {
     }
     public Material icon(String id) { return icons.getOrDefault(id.toLowerCase(Locale.ROOT), Material.NAME_TAG); }
     public int order(String id) { return orders.getOrDefault(id.toLowerCase(Locale.ROOT), 0); }
+    public List<String> lore(String id) { return List.copyOf(lores.getOrDefault(id.toLowerCase(Locale.ROOT), List.of())); }
 
     public synchronized boolean add(String id) {
         if (id == null) return false;
@@ -40,6 +42,7 @@ public final class KitCatalog {
         displayNames.put(normalized, normalized.replace('_', ' '));
         icons.put(normalized, Material.NAME_TAG);
         orders.put(normalized, definitions.size());
+        lores.put(normalized, new ArrayList<>());
         disabled.add(normalized);
         return true;
     }
@@ -52,6 +55,7 @@ public final class KitCatalog {
         displayNames.remove(normalized);
         icons.remove(normalized);
         orders.remove(normalized);
+        lores.remove(normalized);
         return true;
     }
 
@@ -62,6 +66,7 @@ public final class KitCatalog {
     public void setDisplayName(String id, String value) { displayNames.put(id.toLowerCase(Locale.ROOT), value); }
     public void setIcon(String id, Material value) { if (value != null) icons.put(id.toLowerCase(Locale.ROOT), value); }
     public void setOrder(String id, int value) { orders.put(id.toLowerCase(Locale.ROOT), value); }
+    public void setLore(String id, List<String> value) { lores.put(id.toLowerCase(Locale.ROOT), new ArrayList<>(value == null ? List.of() : value)); }
 
     private void registerDefaults() {
         for (String id : KITS) {
@@ -69,6 +74,7 @@ public final class KitCatalog {
             displayNames.put(id, id.replace('_', ' '));
             icons.put(id, Material.NAME_TAG);
             orders.put(id, definitions.size());
+            lores.put(id, new ArrayList<>());
         }
         definitions.put("uhc", KitDefinition.uhc());
         definitions.put("crystal", KitDefinition.crystal());
