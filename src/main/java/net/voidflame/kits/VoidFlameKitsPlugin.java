@@ -46,6 +46,19 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
         getCommand("kit").setTabCompleter(commandHandler);
         getCommand("kits").setExecutor(commandHandler);
         getCommand("kits").setTabCompleter(commandHandler);
+        getCommand("kitadmin").setExecutor((sender, command, args) -> {
+            if (!(sender instanceof org.bukkit.entity.Player player)) return true;
+            if (!player.hasPermission("voidflame.kits.manage")) {
+                player.sendMessage(org.bukkit.ChatColor.RED + "You do not have permission.");
+                return true;
+            }
+            if (args.length > 0 && args[0].equalsIgnoreCase("gui")) {
+                guiSettingsMenu.open(player);
+            } else {
+                adminMenu.open(player);
+            }
+            return true;
+        });
         getServer().getPluginManager().registerEvents(new GoldenHeadListener(this), this);
         getServer().getPluginManager().registerEvents(kitService, this);
         kitService.loadServerLayouts();
