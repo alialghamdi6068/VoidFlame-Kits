@@ -16,6 +16,7 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
     private KitEditorManager editor;
     private KitAdminMenu adminMenu;
     private KitAdminSettingsMenu settingsMenu;
+    private KitGuiSettingsMenu guiSettingsMenu;
 
     @Override
     public void onEnable() {
@@ -31,6 +32,7 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
         editor = new KitEditorManager(this);
         adminMenu = new KitAdminMenu(this);
         settingsMenu = new KitAdminSettingsMenu(this);
+        guiSettingsMenu = new KitGuiSettingsMenu(this);
         var validationErrors = kitService.validateConfiguration();
         if (!validationErrors.isEmpty()) {
             validationErrors.forEach(error -> getLogger().severe("[Config] " + error));
@@ -50,6 +52,7 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(editor, this);
         getServer().getPluginManager().registerEvents(adminMenu, this);
         getServer().getPluginManager().registerEvents(settingsMenu, this);
+        getServer().getPluginManager().registerEvents(guiSettingsMenu, this);
         getServer().getPluginManager().registerEvents(new KitDuplicationGuard(this), this);
         getServer().getServicesManager().register(KitCatalog.class, catalog, this, ServicePriority.Normal);
         getServer().getServicesManager().register(net.voidflame.core.api.KitService.class, kitService, this, ServicePriority.Normal);
@@ -127,6 +130,7 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
 
     public KitAdminMenu adminMenu() { return adminMenu; }
     public KitAdminSettingsMenu settingsMenu() { return settingsMenu; }
+    public KitGuiSettingsMenu guiSettingsMenu() { return guiSettingsMenu; }
 
     public KitCatalog catalog() {
         return catalog;
