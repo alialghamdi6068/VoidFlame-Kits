@@ -362,6 +362,9 @@ public final class KitService implements net.voidflame.core.api.KitService, List
         return true;
     }
 
+    @Override
+    public List<String> listIds() { return plugin.catalog().kits(); }
+
     public void clearSelected() { selected.clear(); personalLayouts.clear(); serverLayouts.clear(); }
 
     public String selected(Player player) {
