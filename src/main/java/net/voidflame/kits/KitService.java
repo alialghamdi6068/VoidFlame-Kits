@@ -193,6 +193,9 @@ public final class KitService implements net.voidflame.core.api.KitService, List
         for (String kitId : KitCatalog.KITS) {
             ConfigurationSection root = plugin.getConfig().getConfigurationSection("kits." + kitId);
             if (root == null) {
+                // Custom kits are intentionally created empty in the admin GUI and are
+                // completed through the server layout editor before being enabled.
+                if (!KitCatalog.KITS.contains(kitId)) continue;
                 errors.add("Missing kit configuration: " + kitId);
                 continue;
             }
