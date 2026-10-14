@@ -15,6 +15,7 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
     private net.voidflame.kits.KitService kitService;
     private KitEditorManager editor;
     private KitAdminMenu adminMenu;
+    private NativeKitAdminMenu nativeAdminMenu;
     private KitAdminSettingsMenu settingsMenu;
     private KitGuiSettingsMenu guiSettingsMenu;
 
@@ -31,6 +32,7 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
         kitService = new KitService(this);
         editor = new KitEditorManager(this);
         adminMenu = new KitAdminMenu(this);
+        nativeAdminMenu = new NativeKitAdminMenu(this);
         settingsMenu = new KitAdminSettingsMenu(this);
         guiSettingsMenu = new KitGuiSettingsMenu(this);
         var validationErrors = kitService.validateConfiguration();
@@ -52,10 +54,43 @@ public final class VoidFlameKitsPlugin extends JavaPlugin {
                 player.sendMessage(org.bukkit.ChatColor.RED + "You do not have permission.");
                 return true;
             }
-            if (args.length > 0 && args[0].equalsIgnoreCase("gui")) {
-                guiSettingsMenu.open(player);
-            } else {
-                adminMenu.open(player);
+            String action = args.length == 0 ? "open" : args[0].toLowerCase(java.util.Locale.ROOT);
+            String id = args.length >= 2 ? args[1].toLowerCase(java.util.Locale.ROOT) : "";
+            switch (action) {
+                case "gui" -> guiSettingsMenu.open(player);
+                case "manage" -> { if (id.isBlank()) nativeAdminMenu.open(player); else nativeAdminMenu.openKit(player, id); }
+                case "toggle" -> {
+                    if (!catalog.exists(id)) { player.sendMessage(org.bukkit.ChatColor.RED + "Unknown kit."); nativeAdminMenu.open(player); break; }
+                    catalog.setEnabled(id, !catalog.enabled(id));
+                    saveCatalog();
+                    nativeAdminMenu.openKit(player, id);
+                }
+                case "default" -> {
+                    if (!catalog.exists(id)) { player.sendMessage(org.bukkit.ChatColor.RED + "Unknown kit."); nativeAdminMenu.open(player); break; }
+                    setDefaultKit(id).whenComplete((unused, error) -> getServer().getScheduler().runTask(this, () -> {
+                        if (error != null) player.sendMessage(org.bukkit.ChatColor.RED + "Could not save default kit.");
+                        if (player.isOnline()) nativeAdminMenu.openKit(player, id);
+                    }));
+                }
+                case "layout" -> {
+                    if (!catalog.exists(id)) { player.sendMessage(org.bukkit.ChatColor.RED + "Unknown kit."); nativeAdminMenu.open(player); break; }
+                    editor.openAdmin(player, id);
+                }
+                case "settings" -> {
+                    if (!catalog.exists(id)) { player.sendMessage(org.bukkit.ChatColor.RED + "Unknown kit."); nativeAdminMenu.open(player); break; }
+                    settingsMenu.open(player, id);
+                }
+                case "create" -> nativeAdminMenu.openCreate(player);
+                case "createconfirm" -> {
+                    if (args.length < 2 || !catalog.add(args[1])) {
+                        player.sendMessage(org.bukkit.ChatColor.RED + "Invalid or duplicate kit ID.");
+                        nativeAdminMenu.open(player);
+                        break;
+                    }
+                    saveCatalog();
+                    nativeAdminMenu.openKit(player, args[1]);
+                }
+                default -> nativeAdminMenu.open(player);
             }
             return true;
         });
