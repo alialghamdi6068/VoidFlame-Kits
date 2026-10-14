@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class KitCatalog {
-    public static final List<String> KITS = List.of("sword","axe","uhc","mace","crystal","netherite_pot","smp","spear_mace");
+    public static final List<String> KITS = List.of("sword","axe","uhc","mace","spear_mace","crystal","netherite_pot","smp","diamond_smp","tnt_minecart_lt","tnt_minecart_ht");
 
     private final Map<String, KitDefinition> definitions = new LinkedHashMap<>();
     private final Set<String> disabled = ConcurrentHashMap.newKeySet();
@@ -76,13 +76,46 @@ public final class KitCatalog {
     private void registerDefaults() {
         for (String id : KITS) {
             definitions.put(id, KitDefinition.standard(id));
-            displayNames.put(id, id.replace('_', ' '));
-            icons.put(id, Material.NAME_TAG);
+            displayNames.put(id, displayNameFor(id));
+            icons.put(id, iconFor(id));
             orders.put(id, definitions.size());
             slots.put(id, 10 + ((definitions.size() - 1) % 7) + (((definitions.size() - 1) / 7) * 9));
             lores.put(id, new ArrayList<>());
         }
         definitions.put("uhc", KitDefinition.uhc());
         definitions.put("crystal", KitDefinition.crystal());
+    }
+
+    private static String displayNameFor(String id) {
+        return switch (id) {
+            case "sword" -> "Sword";
+            case "axe" -> "Axe";
+            case "uhc" -> "UHC";
+            case "mace" -> "Mace";
+            case "spear_mace" -> "Spear & Mace";
+            case "crystal" -> "Crystal";
+            case "netherite_pot" -> "Netherite Pot";
+            case "smp" -> "SMP";
+            case "diamond_smp" -> "Diamond SMP";
+            case "tnt_minecart_lt" -> "TNT Minecart LT";
+            case "tnt_minecart_ht" -> "TNT Minecart HT";
+            default -> id.replace('_', ' ');
+        };
+    }
+
+    private static Material iconFor(String id) {
+        return switch (id) {
+            case "sword" -> Material.DIAMOND_SWORD;
+            case "axe" -> Material.DIAMOND_AXE;
+            case "uhc" -> Material.GOLDEN_APPLE;
+            case "mace" -> Material.MACE;
+            case "spear_mace" -> Material.TRIDENT;
+            case "crystal" -> Material.END_CRYSTAL;
+            case "netherite_pot" -> Material.SPLASH_POTION;
+            case "smp" -> Material.TOTEM_OF_UNDYING;
+            case "diamond_smp" -> Material.DIAMOND_CHESTPLATE;
+            case "tnt_minecart_lt", "tnt_minecart_ht" -> Material.TNT_MINECART;
+            default -> Material.NAME_TAG;
+        };
     }
 }
