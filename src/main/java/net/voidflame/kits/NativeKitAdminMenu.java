@@ -3,6 +3,7 @@ package net.voidflame.kits;
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.data.dialog.ActionButton;
 import io.papermc.paper.registry.data.dialog.DialogBase;
+import io.papermc.paper.registry.data.dialog.input.DialogInput;
 import io.papermc.paper.registry.data.dialog.action.DialogAction;
 import io.papermc.paper.registry.data.dialog.body.DialogBody;
 import io.papermc.paper.registry.data.dialog.type.DialogType;
@@ -69,6 +70,25 @@ public final class NativeKitAdminMenu {
         ), 2);
     }
 
+    public void openCreate(Player player) {
+        if (!authorized(player)) return;
+        List<DialogBody> body = List.of(
+                DialogBody.item(new ItemStack(Material.NAME_TAG),
+                        DialogBody.plainMessage(Component.text("Create a custom kit with a unique ID (letters, numbers and underscores).", NamedTextColor.GRAY), 240),
+                        true, true, 48, 48)
+        );
+        List<ActionButton> actions = List.of(
+                ActionButton.create(Component.text("Create Kit", NamedTextColor.GREEN),
+                        Component.text("Validate and save the kit ID.", NamedTextColor.GRAY), 180,
+                        DialogAction.commandTemplate("/kitadmin createconfirm $(kit_id)")),
+                button("Cancel", "Return to kit administration.", "/kitadmin", NamedTextColor.GRAY)
+        );
+        show(player, "VoidFlame • Create Kit", body, actions, 1, List.of(
+                DialogInput.text("kit_id", Component.text("Kit ID", NamedTextColor.GRAY))
+                        .initial("").maxLength(32).width(240).build()
+        ));
+    }
+
     private boolean authorized(Player player) {
         if (player.hasPermission("voidflame.kits.manage")) return true;
         player.sendMessage(Component.text("You do not have permission.", NamedTextColor.RED));
@@ -76,11 +96,16 @@ public final class NativeKitAdminMenu {
     }
 
     private void show(Player player, String title, List<DialogBody> body, List<ActionButton> actions, int columns) {
+        show(player, title, body, actions, columns, List.of());
+    }
+
+    private void show(Player player, String title, List<DialogBody> body, List<ActionButton> actions, int columns, List<DialogInput> inputs) {
         Dialog dialog = Dialog.create(builder -> builder.empty()
                 .base(DialogBase.builder(Component.text(title, NamedTextColor.WHITE))
                         .externalTitle(Component.text("VoidFlame", NamedTextColor.LIGHT_PURPLE))
                         .canCloseWithEscape(true)
                         .body(body)
+                        .inputs(inputs)
                         .build())
                 .type(DialogType.multiAction(actions).columns(columns).build()));
         player.showDialog(dialog);
